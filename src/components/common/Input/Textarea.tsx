@@ -30,7 +30,7 @@ const Textarea: React.FC<TextareaProps> = ({
   };
 
   return (
-    <div className="mt-2">
+    <div className="w-full">
       {label && (
         <label
           htmlFor={id}

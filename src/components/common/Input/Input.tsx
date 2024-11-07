@@ -44,7 +44,7 @@ const Input: React.FC<InputProps> = ({
   };
 
   return (
-    <div className="mt-2">
+    <div className="w-full">
       {label && (
         <label
           htmlFor={id}
@@ -53,7 +53,7 @@ const Input: React.FC<InputProps> = ({
           {label}
         </label>
       )}
-      <div className="relative w-full">
+      <div className="relative">
         <input
           type={showPassword ? "text" : type}
           id={id}

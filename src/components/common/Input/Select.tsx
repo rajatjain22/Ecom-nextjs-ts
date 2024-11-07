@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import "./input.scss";
 
 interface Option {
@@ -11,7 +11,6 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: Option[];
   className?: string;
   value?: string | number;
-  defaultValue?: string | number;
   error?: string;
 }
 
@@ -24,7 +23,6 @@ const Select: React.FC<SelectProps> = ({
   error = "",
   value,
   onChange,
-  defaultValue = "",
   ...rest
 }) => {
   const errorClass = error ? "border border-red-600" : "";
@@ -37,7 +35,7 @@ const Select: React.FC<SelectProps> = ({
   };
 
   return (
-    <Fragment>
+    <div className="w-full">
       {label && (
         <label
           htmlFor={id}
@@ -47,18 +45,17 @@ const Select: React.FC<SelectProps> = ({
         </label>
       )}
 
-      <div className="relative w-full">
+      <div className="relative">
         <select
           id={id}
           name={name}
           className={classes}
           onChange={handleChange}
           aria-invalid={!!error}
-          value={value === null ? "" : value}
-          defaultValue={defaultValue}
+          value={value} // Controlled component using `value` only
           {...rest}
         >
-           <option value="" disabled>
+          <option value="" disabled>
             {label || "Select"}
           </option>
           {options.map((option, index) => (
@@ -74,7 +71,7 @@ const Select: React.FC<SelectProps> = ({
           {error}
         </div>
       )}
-    </Fragment>
+    </div>
   );
 };
 

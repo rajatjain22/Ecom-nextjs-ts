@@ -1,30 +1,29 @@
 import React, { memo } from "react";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input/Input";
-import { VariantItemType } from "./types";
+import { OptionItemType } from "./types";
 
-const VariantItem: React.FC<VariantItemType> = memo(({
-  variant,
-  variantIndex,
+const OptionItem: React.FC<OptionItemType> = memo(({
+  option,
+  optionIndex,
   onNameChange,
   onValueChange,
   onRemoveValue,
-  onRemoveVariant,
+  onRemoveOption,
   onDone,
   onEdit,
   errors
 }) => {
-
-  const variantNameError = errors?.name;
-  const variantValuesError = errors?.values;
+  const optionNameError = errors?.name;
+  const optionValuesError = errors?.values;
 
   return (
     <div className="border rounded-lg p-4 mb-4">
-      {variant.done ? (
-        <div className="cursor-pointer" onClick={() => onEdit(variantIndex)}>
-          <h2 className="font-semibold">{variant.name}</h2>
+      {option.done ? (
+        <div className="cursor-pointer" onClick={() => onEdit(optionIndex)}>
+          <h2 className="font-semibold">{option.name}</h2>
           <div className="flex gap-2">
-            {variant.values.map((val, index) => (
+            {option.values.map((val, index) => (
               <span key={index} className="bg-[#D4E5FF] text-xs mr-2 px-2.5 py-0.5 rounded">{val}</span>
             ))}
           </div>
@@ -35,53 +34,53 @@ const VariantItem: React.FC<VariantItemType> = memo(({
             label="Option name"
             name="name"
             type="text"
-            id={`optionName${variantIndex}`}
-            value={variant.name}
-            onChange={(e) => onNameChange(variantIndex, e.target.value)}
+            id={`optionName${optionIndex}`}
+            value={option.name}
+            onChange={(e) => onNameChange(optionIndex, e.target.value)}
             className="w-full border rounded px-3 py-2"
             placeholder="Size"
             autoFocus
           />
-          {variantNameError && (
-            <div className="text-xs text-red-600 mt-1">{variantNameError}</div>
+          {optionNameError && (
+            <div className="text-xs text-red-600 mt-1">{optionNameError}</div>
           )}
           <div className="mt-2">
             <label className="inline-block text-sm font-medium text-gray-700">Option values</label>
             <div className="space-y-2">
-              {variant.values.map((value, valueIndex) => (
+              {option.values.map((value, valueIndex) => (
                 <div key={valueIndex} className="flex items-center">
                   <Input
                     name="value"
                     type="text"
-                    id={`optionValue${variantIndex}-${valueIndex}`}
+                    id={`optionValue${optionIndex}-${valueIndex}`}
                     value={value}
-                    onChange={(e) => onValueChange(variantIndex, valueIndex, e.target.value)}
+                    onChange={(e) => onValueChange(optionIndex, valueIndex, e.target.value)}
                     className="w-full border rounded px-3 py-2"
                     placeholder="XL"
-                    deleteOptionHandle={variant.values.length > 1 ? () => onRemoveValue(variantIndex, valueIndex) : undefined}
+                    deleteOptionHandle={option.values.length > 1 ? () => onRemoveValue(optionIndex, valueIndex) : undefined}
                   />
                 </div>
               ))}
             </div>
           </div>
 
-          {variantValuesError && (
-            <div className="text-xs text-red-600 mt-1">{variantValuesError}</div>
+          {optionValuesError && (
+            <div className="text-xs text-red-600 mt-1">{optionValuesError}</div>
           )}
           <div className="flex justify-between mt-2">
             <Button
               type="button"
               className="p-2 rounded-lg bg-red-600 py-2 text-sm text-white transition duration-200 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-              onClick={() => onRemoveVariant(variantIndex)}
+              onClick={() => onRemoveOption(optionIndex)}
               variant="primary"
             >
               Delete
             </Button>
-            {variant.name !== "" && variant.values.length &&
+            {option.name !== "" && option.values.length &&
               <Button
                 type="button"
                 className="p-2 rounded-lg bg-primary py-2 text-sm text-white transition duration-200 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
-                onClick={() => onDone(variantIndex)}
+                onClick={() => onDone(optionIndex)}
                 variant="primary"
               >
                 Done
@@ -94,4 +93,4 @@ const VariantItem: React.FC<VariantItemType> = memo(({
   );
 });
 
-export default VariantItem;
+export default OptionItem;
