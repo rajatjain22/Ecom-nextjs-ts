@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+// @import "node_modules/@glidejs/glide/src/assets/sass/glide.core";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  // NEUTRAL COLOR
+  --c-neutral-50: 249, 250, 251;
+  --c-neutral-100: 243, 244, 246;
+  --c-neutral-200: 229, 231, 235;
+  --c-neutral-300: 209, 213, 219;
+  --c-neutral-400: 156, 163, 175;
+  --c-neutral-500: 107, 114, 128;
+  --c-neutral-600: 75, 85, 99;
+  --c-neutral-700: 55, 65, 81;
+  --c-neutral-800: 31, 41, 55;
+  --c-neutral-900: 17, 24, 39;
+
+  --w-side: 250px;
+  --w-side-md: 170px;
+  --w-side-small: 75px;
+  /* --color-bgbody: 246 249 251; */
+  --color-bgbody: #f8f8f8;
+  --color-primary: 219 39 119;
+  --color-primary-soft: 252 231 243;
+  --color-secondery: 241 245 249;
+}

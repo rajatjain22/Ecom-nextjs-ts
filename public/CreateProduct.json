@@ -1,0 +1,71 @@
+{
+  "operationName": "CreateProduct",
+  "variables": {
+    "product": {
+      "title": "Short",
+      "descriptionHtml": "",
+      "handle": "",
+      "seo": {
+        "title": "",
+        "description": ""
+      },
+      "status": "DRAFT",
+      "productOptions": [
+        {
+          "name": "Color",
+          "values": [
+            {
+              "name": "black"
+            },
+            {
+              "name": "red"
+            }
+          ]
+        },
+        {
+          "name": "Size",
+          "values": [
+            {
+              "name": "XL"
+            },
+            {
+              "name": "L"
+            },
+            {
+              "name": "M"
+            }
+          ]
+        }
+      ],
+      "tags": [],
+      "templateSuffix": "",
+      "giftCardTemplateSuffix": "",
+      "vendor": "",
+      "productCategory": {
+        "productTaxonomyNodeId": "gid://shopify/ProductTaxonomyNode/9531"
+      },
+      "productType": "",
+      "publications": [
+        {
+          "publicationId": "gid://shopify/Publication/84373766276"
+        },
+        {
+          "publicationId": "gid://shopify/Publication/89239158916"
+        },
+        {
+          "publicationId": "gid://shopify/Publication/89239191684"
+        }
+      ],
+      "giftCard": false,
+      "collectionsToJoin": [],
+      "workflow": "product-details-create",
+      "metafields": []
+    },
+    "media": [],
+    "productPreferences": {
+      "showSkuAndBarcode": false,
+      "showInternationalShipping": false
+    }
+  },
+  "query": "mutation CreateProduct($product: ProductInput!, $media: [CreateMediaInput!], $productPreferences: ProductPreferencesInput) {\n  productCreate(\n    input: $product\n    media: $media\n    productPreferences: $productPreferences\n  ) {\n    product {\n      id\n      title\n      handle\n      descriptionHtml\n      options {\n        id\n        name\n        linkedMetafield {\n          namespace\n          key\n          __typename\n        }\n        optionValues {\n          id\n          name\n          linkedMetafieldValue\n          __typename\n        }\n        __typename\n      }\n      resourceAlerts {\n        content\n        dismissed\n        dismissibleHandle\n        severity\n        title\n        actions {\n          primary\n          title\n          url\n          __typename\n        }\n        __typename\n      }\n      ...SEOCardProduct\n      ...ProductCategory\n      ...ProductType\n      ...TaxonomyCategory\n      __typename\n    }\n    userErrors {\n      field\n      message\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment SEOCardProduct on Product {\n  seo {\n    title\n    description\n    __typename\n  }\n  __typename\n}\n\nfragment ProductCategory on Product {\n  productCategory {\n    productTaxonomyNodeId\n    parentProductTaxonomyNodeId\n    name\n    fullName\n    isLeaf\n    isRoot\n    level\n    __typename\n  }\n  inferredProductMetadata {\n    productCategory {\n      productTaxonomyNodeId\n      parentProductTaxonomyNodeId\n      name\n      fullName\n      isLeaf\n      isRoot\n      level\n      __typename\n    }\n    source\n    __typename\n  }\n  __typename\n}\n\nfragment ProductType on Product {\n  productType\n  __typename\n}\n\nfragment TaxonomyCategory on Product {\n  category {\n    id\n    name\n    fullName\n    isArchived\n    migratedTo {\n      id\n      name\n      fullName\n      isArchived\n      __typename\n    }\n    __typename\n  }\n  __typename\n}\n"
+}

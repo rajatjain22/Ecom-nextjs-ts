@@ -1,0 +1,271 @@
+{
+  "operationName": "CreateProductCreateProductVariants",
+  "variables": {
+    "productId": "gid://shopify/Product/8163461660804",
+    "variantsToBulkCreate": [
+      {
+        "optionValues": [
+          {
+            "optionId": "gid://shopify/ProductOption/10356695269508",
+            "id": "gid://shopify/ProductOptionValue/2142414864516"
+          },
+          {
+            "optionId": "gid://shopify/ProductOption/10356695302276",
+            "id": "gid://shopify/ProductOptionValue/2142414930052"
+          }
+        ],
+        "requiresShipping": true,
+        "weight": 0,
+        "weightUnit": "KILOGRAMS",
+        "sku": "",
+        "barcode": "",
+        "inventoryPolicy": "DENY",
+        "inventoryQuantities": [
+          {
+            "availableQuantity": 5,
+            "locationId": "gid://shopify/Location/65308786820"
+          }
+        ],
+        "fulfillmentServiceId": "gid://shopify/FulfillmentService/manual",
+        "inventoryItem": {
+          "cost": null,
+          "tracked": true,
+          "harmonizedSystemCode": null,
+          "countryCodeOfOrigin": null,
+          "provinceCodeOfOrigin": null,
+          "measurement": {
+            "dimensions": {
+              "length": 0,
+              "width": 0,
+              "height": 0,
+              "unit": "CENTIMETERS"
+            },
+            "shippingPackageId": null
+          }
+        },
+        "price": "12.00",
+        "taxable": true,
+        "taxCode": ""
+      },
+      {
+        "optionValues": [
+          {
+            "optionId": "gid://shopify/ProductOption/10356695269508",
+            "id": "gid://shopify/ProductOptionValue/2142414864516"
+          },
+          {
+            "optionId": "gid://shopify/ProductOption/10356695302276",
+            "id": "gid://shopify/ProductOptionValue/2142414962820"
+          }
+        ],
+        "requiresShipping": true,
+        "weight": 0,
+        "weightUnit": "KILOGRAMS",
+        "sku": "",
+        "barcode": "",
+        "inventoryPolicy": "DENY",
+        "inventoryQuantities": [
+          {
+            "availableQuantity": 0,
+            "locationId": "gid://shopify/Location/65308786820"
+          }
+        ],
+        "fulfillmentServiceId": "gid://shopify/FulfillmentService/manual",
+        "inventoryItem": {
+          "cost": null,
+          "tracked": true,
+          "harmonizedSystemCode": null,
+          "countryCodeOfOrigin": null,
+          "provinceCodeOfOrigin": null,
+          "measurement": {
+            "dimensions": {
+              "length": 0,
+              "width": 0,
+              "height": 0,
+              "unit": "CENTIMETERS"
+            },
+            "shippingPackageId": null
+          }
+        },
+        "taxable": true,
+        "taxCode": ""
+      },
+      {
+        "optionValues": [
+          {
+            "optionId": "gid://shopify/ProductOption/10356695269508",
+            "id": "gid://shopify/ProductOptionValue/2142414864516"
+          },
+          {
+            "optionId": "gid://shopify/ProductOption/10356695302276",
+            "id": "gid://shopify/ProductOptionValue/2142414995588"
+          }
+        ],
+        "requiresShipping": true,
+        "weight": 0,
+        "weightUnit": "KILOGRAMS",
+        "sku": "",
+        "barcode": "",
+        "inventoryPolicy": "DENY",
+        "inventoryQuantities": [
+          {
+            "availableQuantity": 0,
+            "locationId": "gid://shopify/Location/65308786820"
+          }
+        ],
+        "fulfillmentServiceId": "gid://shopify/FulfillmentService/manual",
+        "inventoryItem": {
+          "cost": null,
+          "tracked": true,
+          "harmonizedSystemCode": null,
+          "countryCodeOfOrigin": null,
+          "provinceCodeOfOrigin": null,
+          "measurement": {
+            "dimensions": {
+              "length": 0,
+              "width": 0,
+              "height": 0,
+              "unit": "CENTIMETERS"
+            },
+            "shippingPackageId": null
+          }
+        },
+        "taxable": true,
+        "taxCode": ""
+      },
+      {
+        "optionValues": [
+          {
+            "optionId": "gid://shopify/ProductOption/10356695269508",
+            "id": "gid://shopify/ProductOptionValue/2142414897284"
+          },
+          {
+            "optionId": "gid://shopify/ProductOption/10356695302276",
+            "id": "gid://shopify/ProductOptionValue/2142414930052"
+          }
+        ],
+        "requiresShipping": true,
+        "weight": 0,
+        "weightUnit": "KILOGRAMS",
+        "sku": "",
+        "barcode": "",
+        "inventoryPolicy": "DENY",
+        "inventoryQuantities": [
+          {
+            "availableQuantity": 25,
+            "locationId": "gid://shopify/Location/65308786820"
+          }
+        ],
+        "fulfillmentServiceId": "gid://shopify/FulfillmentService/manual",
+        "inventoryItem": {
+          "cost": null,
+          "tracked": true,
+          "harmonizedSystemCode": null,
+          "countryCodeOfOrigin": null,
+          "provinceCodeOfOrigin": null,
+          "measurement": {
+            "dimensions": {
+              "length": 0,
+              "width": 0,
+              "height": 0,
+              "unit": "CENTIMETERS"
+            },
+            "shippingPackageId": null
+          }
+        },
+        "price": "5.00",
+        "taxable": true,
+        "taxCode": ""
+      },
+      {
+        "optionValues": [
+          {
+            "optionId": "gid://shopify/ProductOption/10356695269508",
+            "id": "gid://shopify/ProductOptionValue/2142414897284"
+          },
+          {
+            "optionId": "gid://shopify/ProductOption/10356695302276",
+            "id": "gid://shopify/ProductOptionValue/2142414962820"
+          }
+        ],
+        "requiresShipping": true,
+        "weight": 0,
+        "weightUnit": "KILOGRAMS",
+        "sku": "",
+        "barcode": "",
+        "inventoryPolicy": "DENY",
+        "inventoryQuantities": [
+          {
+            "availableQuantity": 0,
+            "locationId": "gid://shopify/Location/65308786820"
+          }
+        ],
+        "fulfillmentServiceId": "gid://shopify/FulfillmentService/manual",
+        "inventoryItem": {
+          "cost": null,
+          "tracked": true,
+          "harmonizedSystemCode": null,
+          "countryCodeOfOrigin": null,
+          "provinceCodeOfOrigin": null,
+          "measurement": {
+            "dimensions": {
+              "length": 0,
+              "width": 0,
+              "height": 0,
+              "unit": "CENTIMETERS"
+            },
+            "shippingPackageId": null
+          }
+        },
+        "price": "20.00",
+        "taxable": true,
+        "taxCode": ""
+      },
+      {
+        "optionValues": [
+          {
+            "optionId": "gid://shopify/ProductOption/10356695269508",
+            "id": "gid://shopify/ProductOptionValue/2142414897284"
+          },
+          {
+            "optionId": "gid://shopify/ProductOption/10356695302276",
+            "id": "gid://shopify/ProductOptionValue/2142414995588"
+          }
+        ],
+        "requiresShipping": true,
+        "weight": 0,
+        "weightUnit": "KILOGRAMS",
+        "sku": "",
+        "barcode": "",
+        "inventoryPolicy": "DENY",
+        "inventoryQuantities": [
+          {
+            "availableQuantity": 0,
+            "locationId": "gid://shopify/Location/65308786820"
+          }
+        ],
+        "fulfillmentServiceId": "gid://shopify/FulfillmentService/manual",
+        "inventoryItem": {
+          "cost": null,
+          "tracked": true,
+          "harmonizedSystemCode": null,
+          "countryCodeOfOrigin": null,
+          "provinceCodeOfOrigin": null,
+          "measurement": {
+            "dimensions": {
+              "length": 0,
+              "width": 0,
+              "height": 0,
+              "unit": "CENTIMETERS"
+            },
+            "shippingPackageId": null
+          }
+        },
+        "price": "25.00",
+        "taxable": true,
+        "taxCode": ""
+      }
+    ]
+  },
+  "query": "mutation CreateProductCreateProductVariants($productId: ID!, $variantsToBulkCreate: [ProductVariantsBulkInput!]!) {\n  productVariantsBulkCreate(\n    productId: $productId\n    variants: $variantsToBulkCreate\n    strategy: REMOVE_STANDALONE_VARIANT\n  ) {\n    userErrors {\n      field\n      message\n      __typename\n    }\n    __typename\n  }\n}\n"
+}
