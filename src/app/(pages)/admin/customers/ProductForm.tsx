@@ -24,8 +24,8 @@ const optionValidationSchema = Yup.object({
 const productValidationSchema = Yup.object({
   title: Yup.string().required('Title is required'),
   descriptions: Yup.string().required('Description is required'),
-  price: Yup.number().required('Price is required').positive('Price must be a positive number'),
-  compareAtPrice: Yup.number().positive('Compare at Price must be a positive number').notRequired(),
+  files: Yup.array().of(Yup.mixed()).notRequired(),
+  price: Yup.number().required('Price is required').integer('Price must be a integer number'),
   productType: Yup.string().required('Product type is required'),
   vendor: Yup.string().required('Vendor is required'),
   collections: Yup.string().required('Collections is required'),
@@ -33,7 +33,6 @@ const productValidationSchema = Yup.object({
   tags: Yup.string().required('Tags are required'),
   category: Yup.string().required('Category is required'),
   status: Yup.string().required('Status is required'),
-
   sku: Yup.string().notRequired(),
   barcode: Yup.string().notRequired(),
   quantity: Yup.number().integer('Quantity must be an integer').min(0, 'Quantity cannot be negative').required("Quantity are required"),
@@ -47,10 +46,10 @@ const ProductForm = () => {
     initialValues: {
       title: '',
       descriptions: '',
+      files: [],
       category: '',
       status: '',
-      price: '',
-      compareAtPrice: '',
+      price: 0,
       productType: '',
       vendor: '',
       collections: '',
@@ -139,6 +138,65 @@ const ProductForm = () => {
     formik.setFieldValue('options', newOptions);
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      // Adding the selected files to the formik's field value
+      const fileArray = Array.from(files);
+      formik.setFieldValue('files', fileArray);
+    }
+  };
+
+  type Attribute = {
+    name: string;
+    values: string[];
+  };
+  
+  type ProductVariation = {
+    [key: string]: string;  // Dynamic attributes as key-value pairs
+    sku: string;
+    price: any;
+    stock_quantity: any;
+  };
+
+  
+  function generateProductVariations(attributes: Attribute[]): ProductVariation[] {
+    const variations: ProductVariation[] = [];
+  
+    // Helper function to recursively combine attribute values
+    function combineAttributes(index: number, currentCombination: string[]) {
+      if (index === attributes.length) {
+        // Once all attributes are combined, create a variation object
+        const variation: ProductVariation = currentCombination.reduce(
+          (acc, value, idx) => {
+            // Use option1, option2, option3 as keys
+            acc[`option${idx + 1}`] = value;  // option1, option2, option3...
+            return acc;
+          },
+          {} as ProductVariation // Start with an empty object for the variation
+        );
+  
+        // Generate SKU and add pricing and stock quantity
+        variation.sku = `product_${currentCombination.join("_")}`;
+        variation.price = 29.99;
+        variation.stock_quantity = 100;
+  
+        variations.push(variation);
+        return;
+      }
+  
+      const attribute = attributes[index];
+      for (const value of attribute.values) {
+        // Add the current value and move to the next attribute
+        combineAttributes(index + 1, [...currentCombination, value]);
+      }
+    }
+  
+    // Start the combination process
+    combineAttributes(0, []);
+    return variations;
+  }
+  
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="p-4 md:p-8 rounded-lg shadow-md">
@@ -175,7 +233,15 @@ const ProductForm = () => {
                 onBlur={formik.handleBlur}
                 error={formik.touched.descriptions ? formik.errors.descriptions : undefined}
               />
-              <FileUpload id="file-upload" label="Upload Media" name="fileUpload" />
+              <FileUpload
+                id="file-upload"
+                name="files"
+                label="Upload Media"
+                files={formik.values.files}
+                onChange={handleFileChange}
+                accept={["JPEG", "PNG"]}
+              />
+
               <Select
                 label="Category"
                 options={[{ label: "Option 1", value: "1" }, { label: "Option 2", value: "2" }]}
@@ -188,10 +254,10 @@ const ProductForm = () => {
               />
             </Card>
 
-            <Card>
+            <Card className='space-y-4'>
               <label className="block text-sm font-medium text-gray-700">Options</label>
               {formik.values.options.length === 0 ? (
-                <div className="text-sm text-gray-500">No options added yet. Click "Add Option" to start.</div>
+                <div className="text-sm text-gray-500">No options added yet. Click &quot;Add Option&quot; to start.</div>
               ) : (
                 formik.values.options.map((option, index) => (
                   <OptionItem
@@ -219,7 +285,14 @@ const ProductForm = () => {
               )}
             </Card>
 
-            {formik.values.options.length > 0 ? <div>dfgd</div> :
+            {formik.values.options.length > 0 ? generateProductVariations(formik.values.options).map((variant, index) => {
+
+              return (
+                <div key={index}>
+                  {JSON.stringify(variant)}
+                </div>
+              )
+            }) :
               <>
                 <Card className='sm:flex-row sm:gap-5 space-y-2 sm:space-y-0'>
                   <Input
@@ -233,18 +306,6 @@ const ProductForm = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={formik.touched.price ? formik.errors.price : undefined}
-                  />
-                  <Input
-                    label="Compare at Price"
-                    type='number'
-                    prefix='₹'
-                    name="compareAtPrice"
-                    id="compareAtPrice"
-                    placeholder="Compare at Price"
-                    value={formik.values.compareAtPrice}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.compareAtPrice ? formik.errors.compareAtPrice : undefined}
                   />
                 </Card>
                 <Card className='space-y-4'>

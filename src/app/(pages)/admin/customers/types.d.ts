@@ -19,10 +19,10 @@ export interface OptionItemType {
 export interface ProductFormValuesType {
     title: string;
     descriptions: string;
+    files:any;
     category: string;
     status: string;
-    price: string;
-    compareAtPrice: string;
+    price: number;
     productType: string;
     vendor: string;
     collections: string;

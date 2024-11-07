@@ -19,7 +19,7 @@ const Button: React.FC<ButtonTypes> = ({
   ...rest
 }) => {
   const disabledClass = disabled || loading ? "opacity-50 cursor-not-allowed" : "";
-  const classes = `flex justify-center items-center ${disabledClass} ${className}`;
+  const classes = `${disabledClass} ${className}`;
 
   return (
     <button
