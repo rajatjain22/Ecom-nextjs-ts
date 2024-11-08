@@ -3,10 +3,10 @@ import useOnClickOutside from "@/hooks/useOnClickOutside";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import Button from "@/components/common/Button";
 
-const Header: React.FC = () => {
+const Header: React.FC = memo(() => {
     const collapseMenuRef = useRef<HTMLUListElement | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -181,6 +181,6 @@ const Header: React.FC = () => {
             </div>
         </header>
     );
-};
+});
 
 export default Header;

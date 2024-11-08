@@ -1,18 +1,16 @@
 import { sideMenu, sideMenuBottom } from "@/constants/sideMenu";
-import { useState } from "react";
+import { memo, useState } from "react";
 import SidebarItem from "./SidebarItem";
 import { SidebarType } from "./types";
 
-
-
-const Sidebar: React.FC<SidebarType> = ({ sidebarOpen, setSidebarOpen }) => {
+const Sidebar: React.FC<SidebarType> = memo(({ sidebarOpen, setSidebarOpen }) => {
   const [pageName, setPageName] = useState<string>('')
   const handleClose = () => {
     setSidebarOpen(presVal => !presVal);
   };
 
   return (
-    <aside className={`z-10 -translate-x-full max-w-[--w-side] md:w-full h-screen fixed top-0 left-0 w-full flex flex-col bg-white rounded-xl p-4 shadow-xl transition-transform duration-300 ease-in-out ${sidebarOpen ? '!translate-x-0' : '!-translate-x-full'}`}>
+    <aside className={`z-10 -translate-x-full max-w-[--w-side] h-screen fixed top-0 left-0 w-full flex flex-col bg-white rounded-xl p-4 shadow-xl transition-transform duration-300 ease-in-out ${sidebarOpen ? '!translate-x-0' : '!-translate-x-full'}`}>
       <header className="relative p-4 mb-2">
         <h5 className="text-xl font-semibold leading-snug text-blue-gray-900">RAJAt</h5>
         <button
@@ -39,6 +37,6 @@ const Sidebar: React.FC<SidebarType> = ({ sidebarOpen, setSidebarOpen }) => {
       </ul>
     </aside>
   )
-}
+});
 
 export default Sidebar;

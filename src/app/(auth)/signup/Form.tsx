@@ -15,7 +15,7 @@ import SocialButton from "@/components/common/Button/SocialButton";
 import Card from "@/components/common/Card";
 
 // Utilities
-import { SIGNUP_INITIAL_VALUES, SIGNUP_SCHEMA } from "@/utilities/form";
+import { SIGNUP_INITIAL_VALUES, SIGNUP_SCHEMA } from "@/utilities/formValidations/auth";
 
 // Define types for the form values
 interface SignupValues {

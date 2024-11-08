@@ -4,7 +4,7 @@ interface SideMenuItemChildren {
 }
 
 export interface SideMenuItem {
-    icon?: JSX.Element | string;
+    icon?: React.ComponentType<any>;
     label: string;
     route?: string;
     badge?: number

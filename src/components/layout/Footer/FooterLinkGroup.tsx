@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Link from "next/link";
 import { FooterLink } from "./types";
 
@@ -7,7 +7,7 @@ interface FooterLinkGroupProps {
     links: FooterLink[];
 }
 
-const FooterLinkGroup: React.FC<FooterLinkGroupProps> = ({ title, links }) => {
+const FooterLinkGroup: React.FC<FooterLinkGroupProps> = memo(({ title, links }) => {
     const formattedTitle = title.replace(/([A-Z])/g, " $1").trim();
 
     return (
@@ -24,6 +24,6 @@ const FooterLinkGroup: React.FC<FooterLinkGroupProps> = ({ title, links }) => {
             </ul>
         </div>
     );
-};
+});
 
 export default FooterLinkGroup;

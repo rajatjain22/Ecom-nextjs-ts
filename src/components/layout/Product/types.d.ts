@@ -19,7 +19,7 @@ export interface OptionItemType {
 export interface ProductFormValuesType {
     title: string;
     descriptions: string;
-    files:any;
+    media:any;
     category: string;
     status: string;
     price: number;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,7 +11,7 @@ interface SidebarDropdownProps {
   item: MenuItem[];
 }
 
-const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ item }) => {
+const SidebarDropdown: React.FC<SidebarDropdownProps> = memo(({ item }) => {
   const pathname = usePathname();
 
   return (
@@ -30,6 +30,6 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ item }) => {
       ))}
     </ul>
   );
-};
+});
 
 export default SidebarDropdown;

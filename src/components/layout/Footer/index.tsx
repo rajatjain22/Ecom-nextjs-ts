@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import { footerLinks } from "@/constants/footer";
 import FooterLinkGroup from "./FooterLinkGroup";
 import SearchInput from "@/components/common/SearchInput";
 
-const Footer: React.FC = () => {
+const Footer: React.FC = memo(() => {
     return (
         <footer className="bg-white py-12 px-8 font-sans tracking-wide">
             <div className="grid max-sm:grid-cols-1 max-lg:grid-cols-2 lg:grid-cols-5 lg:gap-14 max-lg:gap-8">
@@ -21,6 +21,6 @@ const Footer: React.FC = () => {
             </div>
         </footer>
     );
-};
+});
 
 export default Footer;

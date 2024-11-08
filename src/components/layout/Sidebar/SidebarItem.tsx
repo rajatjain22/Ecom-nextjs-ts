@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SidebarDropdown from "./SidebarDropdown";
 import { SideMenuItem } from "./types";
-import Image from "next/image";
 
 interface SidebarItemProps {
   item: SideMenuItem;
@@ -11,7 +10,11 @@ interface SidebarItemProps {
   setPageName: (page: string) => void;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ item, pageName, setPageName }) => {
+const SidebarItem: React.FC<SidebarItemProps> = memo(({
+  item,
+  pageName,
+  setPageName,
+}) => {
   const pathname = usePathname();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
@@ -41,21 +44,23 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, pageName, setPageName }
             e.preventDefault();
             handleToggleDropdown();
           }
+          if (item?.onClick) {
+            e.preventDefault();
+            item.onClick(e);
+          }
         }}
-        className={`${isItemActive ? "bg-primary text-white" : ""} relative flex items-center w-full p-1 rounded-lg hover:bg-blue-gray-50 hover:text-blue-gray-900`}
+        className={`${
+          isItemActive ? "bg-primary text-white" : ""
+        } relative flex items-center w-full p-1 rounded-lg hover:bg-blue-gray-50 hover:text-blue-gray-900`}
         aria-current={isItemActive ? "page" : undefined}
       >
-        <Image
-          src={item?.icon?.src || ""}
-          alt="Icon"
-          width={15}
-          height={15}
-          className="m-2"
-        />
+        {item.icon && <item.icon />}
         {item.label}
         {item.children && (
           <svg
-            className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${isDropdownOpen ? "rotate-180" : ""}`}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
+              isDropdownOpen ? "rotate-180" : ""
+            }`}
             width="20"
             height="20"
             viewBox="0 0 20 20"
@@ -86,6 +91,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item, pageName, setPageName }
       )}
     </li>
   );
-};
+});
 
 export default SidebarItem;
