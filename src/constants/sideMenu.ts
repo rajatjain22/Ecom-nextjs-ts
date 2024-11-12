@@ -1,10 +1,12 @@
 import { DashboardIcon } from "@/components/Icons";
 import { signOut } from "next-auth/react";
 import { SideMenuItem } from "@/components/layout/Sidebar/types";
+import HomeIcon from "@/components/Icons/Home.icon";
+import UsersIcon from "@/components/Icons/Users.icon";
 
 export const sideMenu: SideMenuItem[] = [
   {
-    icon: DashboardIcon,
+    icon: HomeIcon,
     label: "Dashboard",
     route: "/admin",
   },
@@ -15,18 +17,23 @@ export const sideMenu: SideMenuItem[] = [
     badge: 5,
   },
   {
-    icon: DashboardIcon,
+    icon: UsersIcon,
     label: "Customers",
     route: "/admin/customers",
   },
   {
     icon: DashboardIcon,
-    label: "Careers's",
+    label: "Category",
     route: "#",
     children: [
       { label: "Add Careers's", route: "/admin/careers/addCareers" },
       { label: "View Careers's", route: "/admin/careers" },
     ],
+  },
+  {
+    icon: DashboardIcon,
+    label: "Discount",
+    route: "/admin/discounts",
   },
 ];
 

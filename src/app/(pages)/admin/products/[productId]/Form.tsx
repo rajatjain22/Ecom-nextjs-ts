@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import Select from "@/components/common/Input/Select";
 import Button from "@/components/common/Button";
 import Card from "@/components/common/Card";
-import { productValidationSchema } from "@/utilities/formValidations/product";
 import GeneralInformation from "@/components/layout/Product/GeneralInformationSection";
 import VariantsSection from "@/components/layout/Product/VariantsSection";
 import PricingSection from "@/components/layout/Product/PricingSection";
@@ -13,7 +12,10 @@ import ProductOrganizationSection from "@/components/layout/Product/ProductOrgan
 import { ProductFormValuesType } from "@/components/layout/Product/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 
-const ProductForm = () => {
+import { validationSchema } from "@/utilities/formValidations/product";
+
+const ProductForm = ({ productId }: { productId: string }) => {
+  const newProductId = productId === "new"
   const formik = useFormik<ProductFormValuesType>({
     initialValues: {
       title: "",
@@ -26,6 +28,7 @@ const ProductForm = () => {
       vendor: "",
       collections: "",
       options: [],
+      variants: [],
       tags: "",
       sku: "",
       barcode: "",
@@ -35,7 +38,7 @@ const ProductForm = () => {
       quantity: 0,
       discount: "",
     },
-    validationSchema: productValidationSchema,
+    validationSchema,
     onSubmit: (values) => {
       console.log("Product added:", values);
     },
@@ -46,7 +49,7 @@ const ProductForm = () => {
   };
 
   return (
-    <form onSubmit={formik.handleSubmit} className="p-8 rounded-lg">
+    <form onSubmit={formik.handleSubmit}>
       <div className="flex flex-row justify-between items-center mb-6">
         <div className="">
           <h1 className="text-2xl font-semibold">Add New Product</h1>
@@ -73,7 +76,7 @@ const ProductForm = () => {
         <div className="md:col-span-2 space-y-6">
           <GeneralInformation formik={formik} />
 
-          <VariantsSection formik={formik} />
+          <VariantsSection formik={formik} productId={productId}/>
 
           {formik.values.options.length === 0 && (
             <PricingSection formik={formik} />

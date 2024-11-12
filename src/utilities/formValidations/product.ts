@@ -19,7 +19,7 @@ const createRequiredIfNoOptions = (fieldName: string, fieldSchema: Yup.NumberSch
         })
 };
 
-export const productValidationSchema = Yup.object({
+export const validationSchema = Yup.object({
     title: Yup.string().required('Title is required'),
     descriptions: Yup.string().required('Description is required'),
     files: Yup.array().of(Yup.mixed()).notRequired(),

@@ -51,7 +51,7 @@ const SidebarItem: React.FC<SidebarItemProps> = memo(({
         }}
         className={`${
           isItemActive ? "bg-primary text-white" : ""
-        } relative flex items-center w-full p-1 rounded-lg hover:bg-blue-gray-50 hover:text-blue-gray-900`}
+        } relative flex items-center gap-3 w-full p-2 rounded-lg hover:bg-blue-gray-50 hover:text-blue-gray-900`}
         aria-current={isItemActive ? "page" : undefined}
       >
         {item.icon && <item.icon />}

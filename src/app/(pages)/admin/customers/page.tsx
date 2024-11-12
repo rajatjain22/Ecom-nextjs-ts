@@ -234,7 +234,7 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <div className="font-sans p-4">
+    <div className="font-sans">
       <div className="flex flex-row justify-between items-center mb-6 p-4">
         <h1 className="text-2xl font-semibold mb-4 md:mb-0">Customers</h1>
         <div className="flex space-x-2">

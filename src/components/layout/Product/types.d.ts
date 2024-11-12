@@ -1,11 +1,11 @@
-export interface VariantType {
+export interface OptionType {
     name: string;
     values: string[];
     done: boolean;
 }
 
 export interface OptionItemType {
-    option: VariantType;
+    option: OptionType;
     optionIndex: number;
     onNameChange: (index: number, name: string) => void;
     onValueChange: (variantIndex: number, valueIndex: number, value: string) => void;
@@ -27,7 +27,8 @@ export interface ProductFormValuesType {
     vendor: string;
     collections: string;
     tags: string;
-    options: VariantType[];
+    options: OptionType[];
+    variants: any;
     sku: string,
     barcode: string,
     quantity: number,

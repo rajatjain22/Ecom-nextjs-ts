@@ -1,42 +1,52 @@
-import React, { memo } from 'react';
-import Button from '@/components/common/Button';
-import OptionItem from './OptionItem';
-import Card from '@/components/common/Card';
+"use client";
 
-const VariantsSection = memo(({ formik }: any) => {
+import React, { memo } from "react";
+import Button from "@/components/common/Button";
+import OptionItem from "./OptionItem";
+import Card from "@/components/common/Card";
+import { useRouter } from "next/navigation";
+
+const VariantsSection = memo(({ formik, productId }: any) => {
+  const router = useRouter();
 
   const handleOptionChange = (index: number, name: string) => {
     const newOptions = [...formik.values.options];
     newOptions[index].name = name;
-    formik.setFieldValue('options', newOptions);
+    formik.setFieldValue("options", newOptions);
   };
 
-  const handleValueChange = (optionIndex: number, valueIndex: number, value: string) => {
+  const handleValueChange = (
+    optionIndex: number,
+    valueIndex: number,
+    value: string
+  ) => {
     const newOptions = [...formik.values.options];
     newOptions[optionIndex].values[valueIndex] = value;
-    formik.setFieldValue('options', newOptions);
+    formik.setFieldValue("options", newOptions);
 
     if (newOptions[optionIndex].values.length - 1 === valueIndex && value) {
       newOptions[optionIndex].values.push(""); // Add a new empty value if needed
-      formik.setFieldValue('options', newOptions);
+      formik.setFieldValue("options", newOptions);
     }
   };
 
   const removeValue = (optionIndex: number, valueIndex: number) => {
     const newOptions = [...formik.values.options];
     newOptions[optionIndex].values.splice(valueIndex, 1);
-    formik.setFieldValue('options', newOptions);
+    formik.setFieldValue("options", newOptions);
   };
 
   const removeOption = (index: number) => {
-    const newOptions = formik.values.options.filter((_: any, i: number) => i !== index);
-    formik.setFieldValue('options', newOptions);
+    const newOptions = formik.values.options.filter(
+      (_: any, i: number) => i !== index
+    );
+    formik.setFieldValue("options", newOptions);
   };
 
   const addOption = () => {
-    const blankOption = { name: '', values: [''], done: false };
+    const blankOption = { name: "", values: [""], done: false };
     if (formik.values.options.length < 3) {
-      formik.setFieldValue('options', [...formik.values.options, blankOption]);
+      formik.setFieldValue("options", [...formik.values.options, blankOption]);
     }
   };
 
@@ -45,19 +55,29 @@ const VariantsSection = memo(({ formik }: any) => {
     let hasErrors = false;
 
     if (!optionData.name.trim()) {
-      formik.setFieldError(`options[${index}].name`, 'Option name cannot be empty.');
+      formik.setFieldError(
+        `options[${index}].name`,
+        "Option name cannot be empty."
+      );
       hasErrors = true;
     }
 
     if (optionData.values.every((v: string) => !v.trim())) {
-      formik.setFieldError(`options[${index}].values`, 'Values cannot be empty.');
+      formik.setFieldError(
+        `options[${index}].values`,
+        "Values cannot be empty."
+      );
       hasErrors = true;
     }
 
     if (!hasErrors) {
       const updatedOptions = [...formik.values.options];
-      updatedOptions[index] = { ...updatedOptions[index], done: true, values: optionData.values.filter(Boolean) };
-      formik.setFieldValue('options', updatedOptions);
+      updatedOptions[index] = {
+        ...updatedOptions[index],
+        done: true,
+        values: optionData.values.filter(Boolean),
+      };
+      formik.setFieldValue("options", updatedOptions);
     }
   };
 
@@ -65,18 +85,30 @@ const VariantsSection = memo(({ formik }: any) => {
     const newOptions = [...formik.values.options];
     newOptions[index].done = false;
     newOptions[index].values.push(""); // Add an empty value for editing
-    formik.setFieldValue('options', newOptions);
+    formik.setFieldValue("options", newOptions);
   };
 
   return (
-    <Card className='space-y-4'>
-      <div className='flex items-center justify-between'>
+    <Card className="space-y-4">
+      <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Variants</h2>
-        <Button className='border text-gray-700 px-4 py-2 rounded' disabled>Show variants</Button>
+        <Button
+          className="border text-gray-700 px-4 py-2 rounded"
+          onClick={() =>
+            productId !== "new" &&
+            formik.values.variants.length > 0 &&
+            router.push(`/admin/products/${productId}/variants`)
+          }
+          disabled={productId === "new" || formik.values.variants.length === 0}
+        >
+          Show variants
+        </Button>
       </div>
       <label className="block text-sm font-medium text-gray-700">Options</label>
       {formik.values.options.length === 0 ? (
-        <div className="text-sm text-gray-500">No options added yet. Click &quot;Add Option&quot; to start.</div>
+        <div className="text-sm text-gray-500">
+          No options added yet. Click &quot;Add Option&quot; to start.
+        </div>
       ) : (
         formik.values.options.map((option: any, index: number) => (
           <OptionItem
