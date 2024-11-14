@@ -11,8 +11,10 @@ import PricingSection from "@/components/layout/Product/PricingSection";
 import { ProductvariantFormValuesType } from "@/components/layout/Product/types";
 import { useFormik } from "formik";
 import { ProductVariantValidationSchema } from "@/utilities/formValidations/product";
+import Badge from "@/components/common/Badge";
+import Link from "next/link";
 
-const VarinatForm = ({ productId }: { productId: string }) => {
+const VarinatForm = ({ productId, variantId }: { productId: string, variantId: string }) => {
   const formik = useFormik<ProductvariantFormValuesType>({
     initialValues: {
       media: [],
@@ -30,6 +32,21 @@ const VarinatForm = ({ productId }: { productId: string }) => {
       console.log("Product added:", values);
     },
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      formik.setFieldValue('media', [...formik.values.media, ...fileArray]);
+    }
+  };
+
+  const getActiveLinkClass = (href: string) => {
+    return variantId === href
+      ? "p-2 border rounded bg-primary text-white"
+      : "p-2 border rounded";
+  };
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="flex flex-row justify-between items-center mb-6">
@@ -58,10 +75,12 @@ const VarinatForm = ({ productId }: { productId: string }) => {
                 height={100}
               />
               <div>
-                <h2 className="text-lg font-semibold">broken dust</h2>
-                <span className="text-green-600 font-semibold">Active</span>
+                <div className="flex gap-2">
+                  <h2 className="text-lg font-semibold">broken dust</h2>
+                  <Badge className="bg-green-50 text-green-700">Active</Badge>
+                </div>
+                <p className="text-gray-600">9 variants</p>
               </div>
-              <p className="text-gray-600">9 variants</p>
             </div>
             <Input
               id="search"
@@ -69,48 +88,47 @@ const VarinatForm = ({ productId }: { productId: string }) => {
               placeholder="Search variants"
               className="mb-4"
             />
-            <ul className="space-y-2">
-              <li className="p-2 border rounded">red / L</li>
-              <li className="p-2 border rounded">red / XL</li>
-              <li className="p-2 border rounded">red / XXL</li>
-              <li className="p-2 border rounded">black / L</li>
-              <li className="p-2 border rounded">black / XL</li>
-              <li className="p-2 border rounded">black / XXL</li>
-              <li className="p-2 border rounded">greed / L</li>
-              <li className="p-2 border rounded">greed / XL</li>
-              <li className="p-2 border rounded">greed / XXL</li>
-            </ul>
+            <div className="flex flex-col space-y-2">
+              <Link href="1" className={getActiveLinkClass("1")}>
+                red / L
+              </Link>
+              <Link href="2" className={getActiveLinkClass("2")}>
+                red / XL
+              </Link>
+              <Link href="3" className={getActiveLinkClass("3")}>
+                red / XXL
+              </Link>
+              <Link href="4" className={getActiveLinkClass("4")}>
+                black / L
+              </Link>
+              <Link href="5" className={getActiveLinkClass("5")}>
+                black / XL
+              </Link>
+              <Link href="6" className={getActiveLinkClass("6")}>
+                black / XXL
+              </Link>
+              <Link href="7" className={getActiveLinkClass("7")}>
+                greed / L
+              </Link>
+              <Link href="8" className={getActiveLinkClass("8")}>
+                greed / XL
+              </Link>
+              <Link href="9" className={getActiveLinkClass("9")}>
+                greed / XXL
+              </Link>
+            </div>
           </Card>
         </div>
         <div className="md:col-span-2 space-y-6">
           <Card className="space-y-4">
             <h3 className="text-lg font-semibold mb-4">Options</h3>
-            <Input
-              label="Color"
-              id="color"
-              name="color"
-              placeholder="Color"
-              // value={formik.values.title}
-              // onChange={formik.handleChange}
-              // onBlur={formik.handleBlur}
-              // error={formik.touched.title ? formik.errors.title : undefined}
-            />
-            <Input
-              label="size"
-              id="size"
-              name="size"
-              placeholder="Size"
-              // value={formik.values.title}
-              // onChange={formik.handleChange}
-              // onBlur={formik.handleBlur}
-              // error={formik.touched.title ? formik.errors.title : undefined}
-            />
+            <span>Variant: test</span>
             <FileUpload
               id="media"
               name="media"
               label="Media"
-              files={[]}
-              onChange={() => {}}
+              files={formik.values.media}
+              onChange={handleFileChange}
               multiple={true}
               accept={["JPEG", "PNG"]}
             />
