@@ -12,7 +12,7 @@ import ProductOrganizationSection from "@/components/layout/Product/ProductOrgan
 import { ProductFormValuesType } from "@/components/layout/Product/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 
-import { validationSchema } from "@/utilities/formValidations/product";
+import { ProductValidationSchema } from "@/utilities/formValidations/product";
 
 const ProductForm = ({ productId }: { productId: string }) => {
   const newProductId = productId === "new"
@@ -38,7 +38,7 @@ const ProductForm = ({ productId }: { productId: string }) => {
       quantity: 0,
       discount: "",
     },
-    validationSchema,
+    validationSchema: ProductValidationSchema,
     onSubmit: (values) => {
       console.log("Product added:", values);
     },
@@ -108,3 +108,4 @@ const ProductForm = ({ productId }: { productId: string }) => {
 };
 
 export default ProductForm;
+  

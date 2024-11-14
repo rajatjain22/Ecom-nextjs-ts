@@ -37,3 +37,16 @@ export interface ProductFormValuesType {
     weightType: string,
     discount: string,
 }
+
+
+export interface ProductvariantFormValuesType {
+    media:any;
+    price: number;
+    sku: string,
+    barcode: string,
+    quantity: number,
+    brand: string,
+    weight: string,
+    weightType: string,
+    discount: string,
+}
