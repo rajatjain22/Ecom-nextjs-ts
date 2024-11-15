@@ -9,12 +9,14 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   type?: "text" | "password" | "email" | "number" | "date";
   error?: string;
+  prefix?: any;
   deleteOptionHandle?: () => void;
 }
 
 const Input: React.FC<InputProps> = ({
   id,
   label,
+  prefix,
   inputSize = "",
   type = "text",
   name = "",
@@ -31,7 +33,7 @@ const Input: React.FC<InputProps> = ({
   const classes = `${errorClass} block w-full rounded-lg border border-gray-300 py-2 px-4 text-sm outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500 transition duration-200 ${inputSize} ${className}`;
 
   const togglePasswordVisibility = () => {
-    setShowPassword(prev => !prev);
+    setShowPassword((prev) => !prev);
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -56,28 +58,37 @@ const Input: React.FC<InputProps> = ({
           id={id}
           name={name}
           autoComplete="off"
-          className={`${classes} ${deleteOptionHandle || type === "password" ? "!pr-9":""}`}
+          className={`${classes} ${
+            deleteOptionHandle || type === "password" ? "!pr-9" : ""
+          } ${prefix ? "!pl-7" : ""}`}
           placeholder={placeholder}
           value={value}
           onChange={handleChange}
           aria-invalid={!!error}
           {...rest}
         />
+        {prefix && (
+          <span className="absolute top-3 left-2 cursor-pointer">{prefix}</span>
+        )}
         {type === "password" && (
           <div
             className="absolute top-2 right-2 cursor-pointer"
             onClick={togglePasswordVisibility}
           >
-            {showPassword ? <CloseEyeIcon width={25} height={25}/> : <OpenEyeIcon width={25} height={25}/>}
+            {showPassword ? (
+              <CloseEyeIcon width={25} height={25} />
+            ) : (
+              <OpenEyeIcon width={25} height={25} /> 
+            )}
           </div>
         )}
         {deleteOptionHandle && (
           <div
-          className="absolute top-2 right-2 cursor-pointer"
-          onClick={deleteOptionHandle}
-        >
-          <DeleteIcon width={20} height={20}/>
-        </div>
+            className="absolute top-2 right-2 cursor-pointer"
+            onClick={deleteOptionHandle}
+          >
+            <DeleteIcon width={20} height={20} />
+          </div>
         )}
       </div>
       {error && (

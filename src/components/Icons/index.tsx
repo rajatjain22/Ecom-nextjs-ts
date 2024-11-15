@@ -1,6 +1,7 @@
 export * from "./CloseEye.icon"
 export * from "./Dashboard.icon"
 export * from "./Delete.icon"
+export * from "./Edit.icon"
 export * from "./Google.icon"
 export * from "./Github.icon"
 export * from "./OpenEye.icon"

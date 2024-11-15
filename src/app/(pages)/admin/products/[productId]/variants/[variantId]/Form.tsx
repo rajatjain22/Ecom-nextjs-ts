@@ -10,11 +10,18 @@ import FileUpload from "@/components/common/FileUpload";
 import PricingSection from "@/components/layout/Product/PricingSection";
 import { ProductvariantFormValuesType } from "@/components/layout/Product/types";
 import { useFormik } from "formik";
-import { ProductVariantValidationSchema } from "@/utilities/formValidations/product";
 import Badge from "@/components/common/Badge";
 import Link from "next/link";
 
-const VarinatForm = ({ productId, variantId }: { productId: string, variantId: string }) => {
+import { ProductVariantValidationSchema } from "@/utilities/formValidations/product";
+
+const VarinatForm = ({
+  productId,
+  variantId,
+}: {
+  productId: string;
+  variantId: string;
+}) => {
   const formik = useFormik<ProductvariantFormValuesType>({
     initialValues: {
       media: [],
@@ -24,7 +31,6 @@ const VarinatForm = ({ productId, variantId }: { productId: string, variantId: s
       barcode: "",
       weight: "",
       weightType: "",
-      brand: "",
       discount: "",
     },
     validationSchema: ProductVariantValidationSchema,
@@ -37,7 +43,7 @@ const VarinatForm = ({ productId, variantId }: { productId: string, variantId: s
     const files = event.target.files;
     if (files) {
       const fileArray = Array.from(files);
-      formik.setFieldValue('media', [...formik.values.media, ...fileArray]);
+      formik.setFieldValue("media", [...formik.values.media, ...fileArray]);
     }
   };
 

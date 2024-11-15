@@ -25,7 +25,6 @@ const ProductForm = ({ productId }: { productId: string }) => {
       status: "",
       price: 0,
       productType: "",
-      vendor: "",
       collections: "",
       options: [],
       variants: [],

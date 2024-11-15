@@ -3,13 +3,15 @@
 import React from "react";
 import Table from "@/components/common/Table";
 import Link from "next/link";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 interface Rows {
   id: number;
-  name: string;
-  role: string;
-  email: string;
-  active: boolean;
+  name?: string;
+  image?: string;
+  role?: string;
+  email?: string;
+  active?: boolean;
   action?: JSX.Element;
 }
 
@@ -22,57 +24,10 @@ const Page: React.FC = () => {
   const rows: Rows[] = [
     {
       id: 1,
-      name: "Gladys Jones",
+      image: "https://placehold.co/50x50",
+      name: "Customer 1",
       role: "Admin",
       email: "gladys@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 5,
-      name: "Charlie White",
-      role: "User",
-      email: "charlie@example.com",
       active: true,
       action: (
         <div>
@@ -82,142 +37,11 @@ const Page: React.FC = () => {
     },
     {
       id: 1,
-      name: "Gladys Jones",
+      image: `https://placehold.co/50x50`,
+      name: "Rajat",
       role: "Admin",
       email: "gladys@example.com",
       active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 1,
-      name: "Gladys Jones",
-      role: "Admin",
-      email: "gladys@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 1,
-      name: "Gladys Jones",
-      role: "Admin",
-      email: "gladys@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
       action: (
         <div>
           <button>edit</button>
@@ -227,6 +51,7 @@ const Page: React.FC = () => {
   ];
 
   const columns: Column[] = [
+    { header: "", accessor: "" },
     { header: "Name", accessor: "name" },
     { header: "Role", accessor: "role" },
     { header: "Email", accessor: "email" },
@@ -234,9 +59,12 @@ const Page: React.FC = () => {
   ];
 
   return (
-    <div className="font-sans">
-      <div className="flex flex-row justify-between items-center mb-6 p-4">
-        <h1 className="text-2xl font-semibold mb-4 md:mb-0">Customers</h1>
+    <>
+      <div className="flex flex-row justify-between items-center mb-6">
+        <div className="">
+          <h1 className="text-2xl font-semibold">Customers</h1>
+          <Breadcrumb />
+        </div>
         <div className="flex space-x-2">
           <Link
             href="/admin/customers/new"
@@ -247,7 +75,7 @@ const Page: React.FC = () => {
         </div>
       </div>
       <Table rows={rows} columns={columns} />
-    </div>
+    </>
   );
 };
 

@@ -24,15 +24,14 @@ export interface ProductFormValuesType {
     status: string;
     price: number;
     productType: string;
-    vendor: string;
     collections: string;
     tags: string;
     options: OptionType[];
     variants: any;
+    brand: string,
     sku: string,
     barcode: string,
     quantity: number,
-    brand: string,
     weight: string,
     weightType: string,
     discount: string,
@@ -45,7 +44,6 @@ export interface ProductvariantFormValuesType {
     sku: string,
     barcode: string,
     quantity: number,
-    brand: string,
     weight: string,
     weightType: string,
     discount: string,

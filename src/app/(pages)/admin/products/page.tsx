@@ -3,13 +3,18 @@
 import React from "react";
 import Table from "@/components/common/Table";
 import Link from "next/link";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import { DeleteIcon, EditIcon } from "@/components/Icons";
 
 interface Rows {
   id: number;
-  name: string;
-  role: string;
-  email: string;
-  active: boolean;
+  image?: string;
+  name?: string;
+  status?: boolean;
+  price?: string;
+  quantity?: string;
+  stock?: string;
+  category?: string;
   action?: JSX.Element;
 }
 
@@ -22,221 +27,55 @@ const Page: React.FC = () => {
   const rows: Rows[] = [
     {
       id: 1,
-      name: "Gladys Jones",
-      role: "Admin",
-      email: "gladys@example.com",
-      active: true,
+      image:
+        "https://cdn.shopify.com/s/files/1/0599/0580/2372/files/screenshot-dribbble_com-2024_10_27-15_56_54_40x40@3x.png?v=1730027152",
+      name: "Product 1",
+      status: true,
+      price: "10.00",
+      quantity: "5",
+      category: "testing",
       action: (
-        <div>
-          <button>edit</button>
+        <div className="flex space-x-2">
+          <EditIcon className="w-4 h-4 text-red-500 cursor-pointer" />
+          <DeleteIcon className="w-4 h-4 text-red-500 cursor-pointer" />
         </div>
       ),
     },
     {
       id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
+      image:
+        "https://cdn.shopify.com/s/files/1/0599/0580/2372/files/screenshot-dribbble_com-2024_10_27-15_56_54_40x40@3x.png?v=1730027152",
+      name: "Product 2",
+      status: false,
+      price: "1.00",
+      quantity: "50",
+      category: "testing",
       action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 5,
-      name: "Charlie White",
-      role: "User",
-      email: "charlie@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 1,
-      name: "Gladys Jones",
-      role: "Admin",
-      email: "gladys@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 1,
-      name: "Gladys Jones",
-      role: "Admin",
-      email: "gladys@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 1,
-      name: "Gladys Jones",
-      role: "Admin",
-      email: "gladys@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      role: "User",
-      email: "john@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 3,
-      name: "Alice Johnson",
-      role: "User",
-      email: "alice@example.com",
-      active: true,
-      action: (
-        <div>
-          <button>edit</button>
-        </div>
-      ),
-    },
-    {
-      id: 4,
-      name: "Bob Brown",
-      role: "Admin",
-      email: "bob@example.com",
-      active: false,
-      action: (
-        <div>
-          <button>edit</button>
+        <div className="flex space-x-2">
+          <EditIcon className="w-4 h-4 text-red-500 cursor-pointer" />
+          <DeleteIcon className="w-4 h-4 text-red-500 cursor-pointer" />
         </div>
       ),
     },
   ];
 
   const columns: Column[] = [
+    { header: "", accessor: "" },
     { header: "Name", accessor: "name" },
-    { header: "Role", accessor: "role" },
-    { header: "Email", accessor: "email" },
-    { header: "Active", accessor: "active" },
+    { header: "Status", accessor: "status" },
+    { header: "Price", accessor: "price" },
+    { header: "Quantity", accessor: "quantity" },
+    { header: "Category", accessor: "category" },
+    { header: "Action", accessor: "action" },
   ];
 
   return (
-    <div className="font-sans">
-      <div className="flex flex-row justify-between items-center mb-6 p-4">
-        <h1 className="text-2xl font-semibold mb-4 md:mb-0">Products</h1>
+    <>
+      <div className="flex flex-row justify-between items-center mb-6">
+        <div className="">
+          <h1 className="text-2xl font-semibold">Products</h1>
+          <Breadcrumb />
+        </div>
         <div className="flex space-x-2">
           <Link
             href="/admin/products/new"
@@ -247,7 +86,7 @@ const Page: React.FC = () => {
         </div>
       </div>
       <Table rows={rows} columns={columns} />
-    </div>
+    </>
   );
 };
 
