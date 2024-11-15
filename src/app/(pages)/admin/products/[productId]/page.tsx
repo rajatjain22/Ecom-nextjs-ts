@@ -1,3 +1,4 @@
+import { getProductById } from "@/lib/products";
 import ProductForm from "./Form";
 
 export default async function page({
@@ -7,7 +8,18 @@ export default async function page({
 }) {
   
   const { productId } = params;
-  const productIdOrDefault = productId ?? "";
+console.log(productId)
+  const product = await getProductById(productId, {
+    include: {
+      // variants: true,
+      options: {
+        include: {
+          values: true,
+        },
+      },
+    },
+  });
 
-  return <ProductForm productId={productIdOrDefault} />;
+  console.log(product)
+  return <ProductForm product={product} />;
 }

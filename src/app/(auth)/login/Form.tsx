@@ -64,12 +64,12 @@ const LoginForm: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center text-gray-700">
       <Card className="sm:w-[30rem] animate-fadeIn">
-        <div className="flex-auto">
+        <div className="flex-auto space-y-4">
           <h1 className="mb-6 flex items-center justify-center text-3xl font-bold uppercase tracking-tight text-blue-600">
             LOGIN
           </h1>
           
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik.handleSubmit} className="space-y-2">
             <Input
               label="Email"
               id="email"
@@ -103,7 +103,7 @@ const LoginForm: React.FC = () => {
 
             <Button
               type="submit"
-              className="w-full rounded-lg bg-blue-600 py-2 text-sm text-white transition duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              className="w-full !mt-4 rounded-lg bg-blue-600 py-2 text-sm text-white transition duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               variant="primary"
               loading={mutation.isPending}
             >

@@ -42,7 +42,7 @@ export const ProductValidationSchema = Yup.object({
   ),
   tags: Yup.string().required("Tags are required"),
   category: Yup.string().required("Category is required"),
-  status: Yup.string().required("Status is required"),
+  status: Yup.boolean().required("Status is required"),
   sku: Yup.string().notRequired(),
   barcode: Yup.string().notRequired(),
   brand: Yup.string().required("Brand is required"),

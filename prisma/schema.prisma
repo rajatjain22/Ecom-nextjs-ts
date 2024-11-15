@@ -26,8 +26,96 @@ model Users {
   updatedAt        DateTime  @updatedAt
 }
 
+model Product {
+  id             String         @id @default(cuid())
+  title          String         @db.VarChar(255)
+  description    String?        @db.Text
+  handle         String         @unique @db.VarChar(255)
+  product_type   String?        @db.VarChar(100)
+  quantity       Int            @default(0)
+  price          Decimal        @default(0.0) @db.Decimal(10, 2)
+  discount       Decimal?       @db.Decimal(5, 2)
+  tax            Decimal?       @db.Decimal(5, 2)
+  product_status ProductStatus  @default(draft)
+  product_gender ProductGender?
+  sku            String?        @db.VarChar(50)
+  product_code   String?        @db.VarChar(50)
+  brandId        String? // Foreign key for the brand
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
+
+  // Relations
+  options  ProductOption[] // One product can have many options
+  variants ProductVariant[] // One product can have many variants
+  category ProductCategory[] // Correct reference to ProductCategory model
+  brand    ProductBrand?     @relation(fields: [brandId], references: [id]) // One product has one brand
+}
+
+model ProductOption {
+  id         String  @id @default(cuid())
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id String
+  name       String  @db.VarChar(100)
+  position   Int?
+
+  // Relation to store multiple values for the option
+  values ProductOptionValue[] // One option can have many values
+}
+
+model ProductOptionValue {
+  id        String        @id @default(cuid())
+  option    ProductOption @relation(fields: [option_id], references: [id])
+  option_id String
+  value     String        @db.VarChar(255)
+}
+
+model ProductCategory {
+  id         String  @id @default(cuid())
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id String
+  value      String  @db.VarChar(255)
+}
+
+model ProductBrand {
+  id   String @id @default(cuid())
+  name String @unique @db.VarChar(255)
+
+  // Add relation field to link back to Product
+  products Product[] // One brand can have many products
+}
+
+model ProductVariant {
+  id                String   @id @default(cuid())
+  product           Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  product_id        String
+  title             String   @db.VarChar(255)
+  price             Decimal? @db.Decimal(10, 2)
+  position          Int      @default(1)
+  sku               String?  @unique @db.VarChar(100)
+  option1           String?
+  option2           String?
+  option3           String?
+  quantity_in_stock Int      @default(0) @db.Int
+  is_active         Boolean  @default(true)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+}
+
 enum Role {
   superadmin
   admin
   user
+}
+
+enum ProductStatus {
+  draft
+  published
+  archived
+}
+
+enum ProductGender {
+  male
+  female
+  unisex
+  other
 }

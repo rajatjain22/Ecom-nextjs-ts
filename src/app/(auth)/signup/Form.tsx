@@ -57,12 +57,12 @@ const SignupForm: React.FC = () => {
   return (
     <div className="h-screen flex justify-center items-center py-10">
       <Card className="m-2 w-[30rem] animate-fadeIn">
-        <div className="flex-auto">
+        <div className="flex-auto space-y-4">
           <h1 className="mb-6 flex items-center justify-center text-3xl font-bold uppercase tracking-tight text-blue-600">
             SIGNUP
           </h1>
 
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik.handleSubmit} className="space-y-2">
             {["name", "email"].map((field) => (
               <Input
                 key={field}
@@ -91,13 +91,11 @@ const SignupForm: React.FC = () => {
               error={formik.touched.password ? formik.errors.password : undefined}
               autoFocus
             />
-
-
             {error && <div className="text-red-600 mb-4">{error}</div>}
 
             <Button
               type="submit"
-              className="w-full mb-2 rounded-lg bg-blue-600 py-2 text-sm text-white transition duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              className="w-full !mt-4 rounded-lg bg-blue-600 py-2 text-sm text-white transition duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               variant="primary"
               loading={mutation.isPending}
             >
@@ -111,6 +109,7 @@ const SignupForm: React.FC = () => {
               </Link>
             </p>
           </form>
+          
           <Divider text="or" />
 
           <SocialButton platform="Google" />
