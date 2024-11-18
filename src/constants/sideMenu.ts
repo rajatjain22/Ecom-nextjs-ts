@@ -12,6 +12,11 @@ export const sideMenu: SideMenuItem[] = [
   },
   {
     icon: DashboardIcon,
+    label: "Orders",
+    route: "/admin/orders"
+  },
+  {
+    icon: DashboardIcon,
     label: "Products",
     route: "/admin/products",
     badge: 5,

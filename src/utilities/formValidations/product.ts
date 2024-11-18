@@ -26,7 +26,6 @@ export const ProductValidationSchema = Yup.object({
   descriptions: Yup.string().required("Description is required"),
   files: Yup.array().of(Yup.mixed()).notRequired(),
   productType: Yup.string().required("Product type is required"),
-  vendor: Yup.string().required("Vendor is required"),
   collections: Yup.string().required("Collections is required"),
   options: Yup.array().of(optionValidationSchema),
   price: createRequiredIfNoOptions(
@@ -43,10 +42,10 @@ export const ProductValidationSchema = Yup.object({
   ),
   tags: Yup.string().required("Tags are required"),
   category: Yup.string().required("Category is required"),
-  status: Yup.string().required("Status is required"),
+  status: Yup.boolean().required("Status is required"),
   sku: Yup.string().notRequired(),
   barcode: Yup.string().notRequired(),
-  brand: Yup.string().notRequired(),
+  brand: Yup.string().required("Brand is required"),
   weight: Yup.number()
     .positive("Weight must be a positive number")
     .notRequired(),
@@ -66,13 +65,15 @@ export const ProductVariantValidationSchema = Yup.object({
   files: Yup.array().of(Yup.mixed()).notRequired(),
   price: Yup.number()
     .integer("Price must be an integer")
-    .min(0, "Price cannot be negative"),
+    .min(0, "Price cannot be negative")
+    .required("Price is required"),
   quantity: Yup.number()
     .integer("Quantity must be an integer")
-    .min(0, "Quantity cannot be negative"),
+    .min(0, "Quantity cannot be negative")
+    .required("Quantity is required"),
   sku: Yup.string().notRequired(),
   barcode: Yup.string().notRequired(),
-  brand: Yup.string().notRequired(),
+  brand: Yup.string().required("Brand is required"),
   weight: Yup.number()
     .positive("Weight must be a positive number")
     .notRequired(),

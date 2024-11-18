@@ -68,7 +68,7 @@ const PricingSection = memo(({ formik }: any) => {
           label="Weight type"
           name="weightType"
           id="weightType"
-          placeholder="WeightType"
+          placeholder="Weight Type"
           value={formik.values.weightType}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -78,16 +78,6 @@ const PricingSection = memo(({ formik }: any) => {
         />
       </div>
       <div className="flex flex-col sm:flex-row sm:gap-5 space-y-2 sm:space-y-0">
-        <Input
-          label="Brand"
-          name="brand"
-          id="brand"
-          placeholder="Brand"
-          value={formik.values.brand}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.brand ? formik.errors.brand : undefined}
-        />
         <Input
           label="Discount"
           name="discount"

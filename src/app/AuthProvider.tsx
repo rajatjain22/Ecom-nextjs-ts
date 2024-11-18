@@ -26,7 +26,6 @@ const AuthProvider = ({ children, session }: AuthProviderProps) => {
   const isPublicPath = PUBLIC_ROUTES.includes(pathname);
   const isAdminPath = pathname.startsWith("/admin");
 
-
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>

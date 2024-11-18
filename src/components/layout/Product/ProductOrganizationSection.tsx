@@ -1,10 +1,10 @@
-import React, { memo } from 'react';
-import Input from '@/components/common/Input/Input';
-import Card from '@/components/common/Card';
+import React, { memo } from "react";
+import Input from "@/components/common/Input/Input";
+import Card from "@/components/common/Card";
 
 const ProductOrganizationSection = memo(({ formik }: any) => {
   return (
-    <Card className='space-y-2 '>
+    <Card className="space-y-2 ">
       <h2 className="text-lg font-semibold mb-4">Product organization</h2>
       <Input
         label="Product Type"
@@ -14,17 +14,19 @@ const ProductOrganizationSection = memo(({ formik }: any) => {
         value={formik.values.productType}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        error={formik.touched.productType ? formik.errors.productType : undefined}
+        error={
+          formik.touched.productType ? formik.errors.productType : undefined
+        }
       />
       <Input
-        label="Vendor"
-        name="vendor"
-        id="vendor"
-        placeholder="Vendor"
-        value={formik.values.vendor}
+        label="Brand"
+        name="brand"
+        id="brand"
+        placeholder="Brand"
+        value={formik.values.brand}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        error={formik.touched.vendor ? formik.errors.vendor : undefined}
+        error={formik.touched.brand ? formik.errors.brand : undefined}
       />
       <Input
         label="Collections"
@@ -34,7 +36,9 @@ const ProductOrganizationSection = memo(({ formik }: any) => {
         value={formik.values.collections}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        error={formik.touched.collections ? formik.errors.collections : undefined}
+        error={
+          formik.touched.collections ? formik.errors.collections : undefined
+        }
       />
       <Input
         label="Tags"

@@ -23,11 +23,128 @@ model Users {
   otpExpiry        DateTime?
   isActive         Boolean   @default(true)
   createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  updatedAt        DateTime  @default(now()) @updatedAt
+
+  profileImages Image[] @relation("UserImages")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  handle      String   @unique @db.VarChar(255)
+  productType String?  @db.VarChar(100)
+  quantity    Int      @default(0)
+  price       Decimal  @default(0.0) @db.Decimal(10, 2)
+  discount    Decimal? @db.Decimal(5, 2)
+  tax         Decimal? @db.Decimal(5, 2)
+  isActive    Boolean  @default(false)
+  sku         String?  @db.VarChar(50)
+  tags        String?  @db.VarChar(50)
+  brandId     String? // Foreign key for the brand
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  options    ProductOption[] // One product can have many options
+  variants   ProductVariant[] // One product can have many variants
+  categories ProductCategory[] // Correct reference to ProductCategory model
+  brand      ProductBrand?     @relation(fields: [brandId], references: [id]) // One product has one brand
+  images     Image[]           @relation("ProductImages")
+  reviews    ProductReview[] // Reviews for the product
+}
+
+model Image {
+  id        String  @id @default(cuid())
+  url       String  @db.VarChar(255) // URL or file path of the image
+  altText   String? @db.VarChar(255) // Optional alt text for SEO purposes
+  isPrimary Boolean @default(false) // Flag to mark the primary image
+  modelType String  @db.VarChar(50) // Type of the model (e.g., 'Product', 'Customer', etc.)
+  modelId   String // Foreign key to link to the specific model (Product, Customer, etc.)
+
+  // Polymorphic relations (related to Product, User, ProductVariant)
+  product Product?        @relation("ProductImages", fields: [modelId], references: [id], map: "Image_productId_fkey")
+  user    Users?          @relation("UserImages", fields: [modelId], references: [id], map: "Image_userId_fkey")
+  variant ProductVariant? @relation("VariantImages", fields: [modelId], references: [id], map: "Image_variantId_fkey")
+
+  @@index([modelType, modelId]) // Index to speed up lookups
+}
+
+model ProductReview {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  rating    Int      @db.Int // Rating out of 5
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductOption {
+  id        String  @id @default(cuid())
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  name      String  @db.VarChar(100)
+  position  Int?
+
+  // Relation to store multiple values for the option
+  values ProductOptionValue[] // One option can have many values
+}
+
+model ProductOptionValue {
+  id       String        @id @default(cuid())
+  option   ProductOption @relation(fields: [optionId], references: [id])
+  optionId String
+  value    String        @db.VarChar(255)
+}
+
+model ProductCategory {
+  id        String  @id @default(cuid())
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  value     String  @db.VarChar(255)
+}
+
+model ProductBrand {
+  id   String @id @default(cuid())
+  name String @unique @db.VarChar(255)
+
+  // Add relation field to link back to Product
+  products Product[] // One brand can have many products
+}
+
+model ProductVariant {
+  id              String   @id @default(cuid())
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId       String
+  title           String   @db.VarChar(255)
+  price           Decimal? @db.Decimal(10, 2)
+  position        Int      @default(1)
+  sku             String?  @unique @db.VarChar(100)
+  option1         String?
+  option2         String?
+  option3         String?
+  quantityInStock Int      @default(0) @db.Int
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  images Image[] @relation("VariantImages", map: "Image_variantId_fkey") // Image relation
 }
 
 enum Role {
   superadmin
   admin
   user
+}
+
+enum ProductStatus {
+  draft
+  active
+}
+
+enum ProductGender {
+  male
+  female
+  unisex
+  other
 }

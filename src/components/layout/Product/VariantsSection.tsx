@@ -96,10 +96,10 @@ const VariantsSection = memo(({ formik, productId }: any) => {
           className="border text-gray-700 px-4 py-2 rounded"
           onClick={() =>
             productId !== "new" &&
-            formik.values.variants.length > 0 &&
+            formik.values.variants &&
             router.push(`/admin/products/${productId}/variants`)
           }
-          disabled={productId === "new" || formik.values.variants.length === 0}
+          disabled={productId === "new" || !formik.values.variants}
         >
           Show variants
         </Button>
