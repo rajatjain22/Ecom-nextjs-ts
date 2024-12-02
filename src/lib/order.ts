@@ -25,7 +25,7 @@ export const getOrderById = async (
   }
 };
 
-export const getAllCustomers = async ({
+export const getAllOrders = async ({
   page = 1,
   limit = 10,
   ...options
@@ -39,8 +39,8 @@ export const getAllCustomers = async ({
     const skip = (page - 1) * limit;
     const take = limit;
 
-    const [customers, totalCount] = await Promise.all([
-      prisma.users.findMany({
+    const [orders, totalCount] = await Promise.all([
+      prisma.order.findMany({
         skip,
         take,
         ...options,
@@ -51,16 +51,16 @@ export const getAllCustomers = async ({
     const totalPages = Math.ceil(totalCount / limit);
 
     return {
-      customers,
+      orders,
       totalCount,
       totalPages,
       page,
     };
   } catch (error) {
-    console.error("Error fetching all customers:", error);
+    console.error("Error fetching all orders:", error);
     return null;
     // throw new CustomError(
-    //   "Failed to retrieve customers data",
+    //   "Failed to retrieve orders data",
     //   STATUS.BAD_REQUEST
     // );
   }
