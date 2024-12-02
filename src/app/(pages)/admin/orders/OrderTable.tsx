@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Table from "@/components/common/Table";
 import Link from "next/link";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import { DeleteIcon, EditIcon } from "@/components/Icons";
 import Image from "next/image";
 import Badge from "@/components/common/Badge";
 
@@ -17,10 +16,10 @@ interface Order {
   id: number;
   image?: string;
   orderNumber: string;
-  createdAt: Date; // Date object from server
+  createdAt: Date;
   status: string;
   user: User;
-  totalAmount: any; // Decimal object (from Prisma or similar)
+  totalAmount: any;
   paymentStatus: string;
   shippingAddress: string;
   billingAddress: string;
@@ -181,6 +180,7 @@ const OrderTable: React.FC<ProductTableProps> = ({
           currentPage: currentPageState,
         }}
         onPageChange={handleNext}
+        notFoundText="No order found"
       />
     </>
   );
