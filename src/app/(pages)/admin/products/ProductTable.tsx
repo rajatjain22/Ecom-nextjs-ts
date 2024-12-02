@@ -153,6 +153,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
           currentPage: currentPageState
         }}
         onPageChange={handleNext}
+        notFoundText="No product found"
       />
     </>
   );

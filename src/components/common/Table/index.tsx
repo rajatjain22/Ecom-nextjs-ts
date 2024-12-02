@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import Button from "../Button";
 import Input from "../Input/Input";
 import { SearchIcon } from "@/components/Icons";
+import InputChecks from "../Input/InputChecks";
 
 interface Row {
   [key: string]: any;
@@ -21,7 +22,8 @@ interface TableProps {
     totalCount: number;
     limit?: number;
   };
-  onPageChange: (page: number) => void; // Function to update page in parent component
+  onPageChange: (page: number) => void;
+  notFoundText?: string
 }
 
 const Table: React.FC<TableProps> = ({
@@ -29,6 +31,7 @@ const Table: React.FC<TableProps> = ({
   columns,
   pagination: { currentPage, totalCount, totalPages, limit = 10 },
   onPageChange,
+  notFoundText = "No data found"
 }) => {
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
   const [sortConfig, setSortConfig] = useState<{
@@ -114,7 +117,8 @@ const Table: React.FC<TableProps> = ({
             id="search"
             name="search"
             type="text"
-            prefix={<SearchIcon fill="#969696"/>}
+            value=""
+            prefix={<SearchIcon fill="#969696" />}
             placeholder="Search here..."
             className="border border-gray-300 rounded p-2 text-sm w-full md:w-64"
           />
@@ -122,22 +126,20 @@ const Table: React.FC<TableProps> = ({
         <div className="flex gap-2">
           <button
             onClick={handleEdit}
-            className={`text-sm py-2 px-4 rounded ${
-              !isRowSelected
-                ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
-                : "bg-green-500 text-white"
-            }`}
+            className={`text-sm py-2 px-4 rounded ${!isRowSelected
+              ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
+              : "bg-green-500 text-white"
+              }`}
             disabled={!isRowSelected}
           >
             Edit
           </button>
           <button
             onClick={handleDelete}
-            className={`text-sm py-2 px-4 rounded ${
-              !isRowSelected
-                ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
-                : "bg-red-500 text-white"
-            }`}
+            className={`text-sm py-2 px-4 rounded ${!isRowSelected
+              ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
+              : "bg-red-500 text-white"
+              }`}
             disabled={!isRowSelected}
           >
             Delete
@@ -148,9 +150,11 @@ const Table: React.FC<TableProps> = ({
         <thead className="whitespace-nowrap capitalize bg-gray-50">
           <tr>
             <th className="pl-4 w-8 border-b border-blue-gray-100 bg-blue-gray-50 text-left text-sm font-semibold text-black cursor-pointer">
-              <input
+              <InputChecks
+                id="headerCheckbox"
+                name="headerCheckbox"
                 type="checkbox"
-                checked={checkedItems.size === rows.length}
+                checked={rows.length > 0 && checkedItems.size === rows.length}
                 onChange={handleSelectAll}
               />
             </th>
@@ -168,10 +172,12 @@ const Table: React.FC<TableProps> = ({
           </tr>
         </thead>
         <tbody className="whitespace-nowrap">
-          {currentEntries.map((row, index) => (
+          {currentEntries.length ? currentEntries.map((row, index) => (
             <tr key={index} className="hover:bg-blue-50">
               <td className="pl-4 w-8 border-b border-blue-gray-50">
-                <input
+                <InputChecks
+                  id={`valueCheckbox${index}`}
+                  name="valueCheckbox"
                   type="checkbox"
                   checked={checkedItems.has(index)}
                   onChange={() => handleCheckboxChange(index)}
@@ -186,7 +192,13 @@ const Table: React.FC<TableProps> = ({
                 </td>
               ))}
             </tr>
-          ))}
+          )) : <tr>
+            <td colSpan={columns.length + 1} className="p-4">
+              <div className="flex items-center justify-center">
+                <span className="text-gray-500 text-md">{notFoundText}</span>
+              </div>
+            </td>
+          </tr>}
         </tbody>
       </table>
       {totalPages > 1 && (
@@ -194,11 +206,10 @@ const Table: React.FC<TableProps> = ({
           {Array.from({ length: totalPages }, (_, index) => (
             <Button
               key={index + 1}
-              className={`flex items-center justify-center cursor-pointer w-7 h-7 border rounded ${
-                currentPage === index + 1
-                  ? "bg-[#007bff] text-white"
-                  : "text-gray-500"
-              }`}
+              className={`flex items-center justify-center cursor-pointer w-7 h-7 border rounded ${currentPage === index + 1
+                ? "bg-[#007bff] text-white"
+                : "text-gray-500"
+                }`}
               onClick={() => handlePageChange(index + 1)} // Update page on click
             >
               {index + 1}

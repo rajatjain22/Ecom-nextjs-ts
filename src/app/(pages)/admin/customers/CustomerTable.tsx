@@ -144,6 +144,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
           currentPage: currentPageState,
         }}
         onPageChange={handleNext}
+        notFoundText="No order found"
       />
     </>
   );

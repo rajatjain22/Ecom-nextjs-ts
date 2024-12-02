@@ -2,7 +2,7 @@ import React from "react";
 
 interface InputChecksProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
-  label: string;
+  label?: string;
   name: string;
   className?: string; // Optional for additional styling
   error?: string; // Optional for displaying error messages
