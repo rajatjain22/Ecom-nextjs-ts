@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import Input from "@/components/common/Input/Input";
 import Select from "@/components/common/Input/Select";
 import Card from "@/components/common/Card";
@@ -12,45 +11,37 @@ import InputChecks from "@/components/common/Input/InputChecks";
 import Textarea from "@/components/common/Input/Textarea";
 import ProfileUpload from "@/components/common/FileUpload/ProfileUpload";
 
-import { validationSchema } from "@/utilities/formValidations/customer";
+import { customerValidationSchema } from "@/utilities/yupValidations/customer";
 import PersonalInfo from "@/components/layout/Customer/PersonalInfo";
 import ShippingInfo from "@/components/layout/Customer/ShippingInfo";
 import AccountInfo from "@/components/layout/Customer/AccountInfo";
 
-const CustomerForm: React.FC = () => {
+const CustomerForm: React.FC<any> = memo(({ customer }) => {
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      gender: "male",
-      birthDate: "",
-      shippingAddressLine1: "",
-      shippingAddressLine2: "",
-      city: "",
-      state: "",
-      postalCode: "",
-      country: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-      newsletter: false,
-      marketing: false,
-      language: "en",
-      currency: "USD",
-      profilePicture: null,
-      notes: "",
-      tags: "",
+      firstName: customer?.firstName ?? "",
+      lastName: customer?.lastName ?? "",
+      email: customer?.email ?? "",
+      phone: customer?.phone ?? "",
+      gender: customer?.gender ?? "male",
+      dateOfBirth: customer?.dateOfBirth ?? "",
+      shippingAddressLine1: customer?.shippingAddressLine1 ?? "",
+      shippingAddressLine2: customer?.shippingAddressLine2 ?? "",
+      city: customer?.city ?? "",
+      state: customer?.state ?? "",
+      postalCode: customer?.postalCode ?? "",
+      country: customer?.country ?? "",
+      profilePicture: customer?.images?.[0] ?? null,
+      notes: customer?.notes ?? "",
+      tags: customer?.tags ?? "",
     },
-    validationSchema,
-    onSubmit: (values) => {
-      console.log("Form submitted", values);
-      // Submit the form data to your backend or API
+    validationSchema: customerValidationSchema,
+    onSubmit: (values, { setSubmitting }) => {
+      console.log("Customer added:", values);
+      setSubmitting(false);
     },
   });
 
-  console.log(formik.errors);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       formik.setFieldValue("profilePicture", event.target.files[0]);
@@ -69,15 +60,18 @@ const CustomerForm: React.FC = () => {
     <form onSubmit={formik.handleSubmit} className="space-y-6">
       <div className="flex flex-row justify-between items-center mb-6">
         <div className="">
-          <h1 className="text-2xl font-semibold">Add New Customer</h1>
+          <h1 className="text-2xl font-semibold">
+            {customer ? "Customer" : "Add New Customer"}
+          </h1>
           <Breadcrumb />
         </div>
         <div className="flex space-x-2">
           <Button
             type="submit"
             className="bg-primary text-white px-4 py-2 rounded"
+            disabled={formik.isSubmitting}
           >
-            Save
+            {customer ? "Update" : "Save"}
           </Button>
         </div>
       </div>
@@ -87,7 +81,7 @@ const CustomerForm: React.FC = () => {
         <div className="md:col-span-2 space-y-6">
           <PersonalInfo formik={formik} />
           <ShippingInfo formik={formik} />
-          <AccountInfo formik={formik} />
+          {/* <AccountInfo formik={formik} /> */}
         </div>
 
         {/* Right Side Cards */}
@@ -107,7 +101,7 @@ const CustomerForm: React.FC = () => {
           </Card>
 
           {/* Preferences */}
-          <Card className="space-y-4">
+          {/* <Card className="space-y-4">
             <h2 className="text-lg font-semibold mb-4">Preferences</h2>
             <InputChecks
               label="Subscribe to newsletter"
@@ -131,7 +125,7 @@ const CustomerForm: React.FC = () => {
                 formik.touched.marketing ? formik.errors.marketing : undefined
               }
             />
-          </Card>
+          </Card> */}
 
           {/* Tags */}
           <Card className="space-y-4">
@@ -143,7 +137,11 @@ const CustomerForm: React.FC = () => {
               value={formik.values.notes}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.notes ? formik.errors.notes : undefined}
+              error={
+                formik.touched.notes && typeof formik.errors.notes === "string"
+                  ? formik.errors.notes
+                  : undefined
+              }
             />
             <Input
               label="Tags"
@@ -153,13 +151,17 @@ const CustomerForm: React.FC = () => {
               onChange={handleTagsChange}
               placeholder="Add tags separated by commas"
               className="w-full border border-gray-300 rounded px-4 py-2"
-              error={formik.touched.tags ? formik.errors.tags : undefined}
+              error={
+                formik.touched.tags && typeof formik.errors.tags === "string"
+                  ? formik.errors.tags
+                  : undefined
+              }
             />
           </Card>
         </div>
       </div>
     </form>
   );
-};
+});
 
 export default CustomerForm;

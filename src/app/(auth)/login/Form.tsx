@@ -15,7 +15,7 @@ import SocialButton from "@/components/common/Button/SocialButton";
 import Card from "@/components/common/Card";
 
 // Utilities
-import { LOGIN_INITIAL_VALUES, LOGIN_SCHEMA } from "@/utilities/formValidations/auth";
+import { LOGIN_INITIAL_VALUES, LOGIN_SCHEMA } from "@/utilities/yupValidations/auth";
 import { SessionUser } from "@/interfaces/auth";
 
 interface SignInError {

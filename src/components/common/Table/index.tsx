@@ -1,5 +1,4 @@
-import React, { useState, useMemo } from "react";
-import Badge from "../Badge";
+import React, { useState, useMemo, useEffect } from "react";
 import Button from "../Button";
 import Input from "../Input/Input";
 import { SearchIcon } from "@/components/Icons";
@@ -16,18 +15,26 @@ interface Column {
 interface TableProps {
   rows: Row[];
   columns: Column[];
-  entriesPerPage?: number;
+  pagination: {
+    totalPages: number;
+    currentPage: number;
+    totalCount: number;
+    limit?: number;
+  };
+  onPageChange: (page: number) => void; // Function to update page in parent component
 }
 
-const Table: React.FC<TableProps> = ({ rows, columns, entriesPerPage = 5 }) => {
+const Table: React.FC<TableProps> = ({
+  rows,
+  columns,
+  pagination: { currentPage, totalCount, totalPages, limit = 10 },
+  onPageChange,
+}) => {
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
-  const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "ascending" | "descending";
   } | null>(null);
-  const [entriesPerPageState, setEntriesPerPageState] =
-    useState(entriesPerPage);
 
   const handleCheckboxChange = (id: number) => {
     setCheckedItems((prev) => {
@@ -76,11 +83,9 @@ const Table: React.FC<TableProps> = ({ rows, columns, entriesPerPage = 5 }) => {
     });
   }, [rows, sortConfig]);
 
-  const indexOfLastEntry = currentPage * entriesPerPageState;
-  const indexOfFirstEntry = indexOfLastEntry - entriesPerPageState;
-  const currentEntries = sortedRows.slice(indexOfFirstEntry, indexOfLastEntry);
-
-  const totalPages = Math.ceil(rows.length / entriesPerPageState);
+  const indexOfLastEntry = currentPage * limit;
+  const indexOfFirstEntry = indexOfLastEntry - limit;
+  const currentEntries = sortedRows;
 
   const isRowSelected = checkedItems.size > 0;
 
@@ -94,6 +99,13 @@ const Table: React.FC<TableProps> = ({ rows, columns, entriesPerPage = 5 }) => {
     console.log("Delete selected rows:", selectedRows);
   };
 
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    if (page !== currentPage) {
+      onPageChange(page); // Trigger parent function to change page
+    }
+  };
+
   return (
     <div className="relative flex flex-col w-full h-full text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
       <div className="flex justify-between p-4">
@@ -102,7 +114,7 @@ const Table: React.FC<TableProps> = ({ rows, columns, entriesPerPage = 5 }) => {
             id="search"
             name="search"
             type="text"
-            prefix={<SearchIcon />}
+            prefix={<SearchIcon fill="#969696"/>}
             placeholder="Search here..."
             className="border border-gray-300 rounded p-2 text-sm w-full md:w-64"
           />
@@ -170,69 +182,30 @@ const Table: React.FC<TableProps> = ({ rows, columns, entriesPerPage = 5 }) => {
                   key={column.accessor}
                   className="p-4 text-sm border-b border-blue-gray-50"
                 >
-                  {column.accessor === "name" ? (
-                    <div className="flex items-center">
-                      <img
-                        src={row["image"]}
-                        alt={row["name"]}
-                        className="w-8 h-8 object-cover rounded-full mr-2"
-                      />
-                      {row["name"]}
-                    </div>
-                  ) : column.accessor === "status" ? (
-                    <Badge
-                      className={row.status ? "bg-green-50 text-green-700" : ""}
-                    >
-                      {row.status ? "Active" : "Draft"}
-                    </Badge>
-                  ) : (
-                    row[column.accessor]
-                  )}
+                  {row[column.accessor]}
                 </td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="md:flex m-4">
-        <p className="text-sm text-gray-500 flex-1">
-          Showing {indexOfFirstEntry + 1} to{" "}
-          {Math.min(indexOfLastEntry, rows.length)} of {rows.length} entries
-        </p>
-        <div className="flex items-center max-md:mt-4">
-          <p className="text-sm text-gray-500">Display</p>
-          <select
-            value={entriesPerPageState}
-            onChange={(e) => {
-              const newEntriesPerPage = Number(e.target.value);
-              setEntriesPerPageState(newEntriesPerPage);
-              setCurrentPage(1);
-            }}
-            className="text-sm text-gray-500 border border-gray-400 rounded h-7 mx-4 px-1 outline-none"
-          >
-            {[5, 10, 20, 50, 100].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-          <div className="flex space-x-1 ml-2">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <Button
-                key={index + 1}
-                className={`flex items-center justify-center cursor-pointer w-7 h-7 rounded ${
-                  currentPage === index + 1
-                    ? "bg-[#007bff] text-white"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setCurrentPage(index + 1)}
-              >
-                {index + 1}
-              </Button>
-            ))}
-          </div>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-end m-4 gap-2">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Button
+              key={index + 1}
+              className={`flex items-center justify-center cursor-pointer w-7 h-7 border rounded ${
+                currentPage === index + 1
+                  ? "bg-[#007bff] text-white"
+                  : "text-gray-500"
+              }`}
+              onClick={() => handlePageChange(index + 1)} // Update page on click
+            >
+              {index + 1}
+            </Button>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -5,11 +5,9 @@ import { MESSAGES } from "@/constants/apiMessages";
 import { Prisma } from "@prisma/client";
 import { Context, HandlerFunction, ValidationError } from "./interface";
 
-// Custom error handler function
 export const errorHandler = (handler: HandlerFunction) => {
   return async (request: NextRequest, context: Context): Promise<NextResponse> => {
     try {
-      // Execute the actual handler function
       return await handler(request, context);
     } catch (error: unknown) {
       // Log the API route, method, and error stack trace

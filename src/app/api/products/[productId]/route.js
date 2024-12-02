@@ -2,20 +2,16 @@ import prisma from "@/config/db.server";
 import { MESSAGES } from "@/constants/apiMessages";
 import { STATUS } from "@/constants/apiStatus";
 import { errorHandler } from "@/errors/errorHandler";
-import {
-  createCombinations,
-  getProductById,
-  prepareOptionsAndValues,
-} from "@/lib/products";
-import { productIdSchema } from "@/utilities/apiValidations/products";
+import { createCombinations, getProductById } from "@/lib/products";
 import { NextResponse } from "next/server";
+import { productIdValidationSchema } from "@/utilities/validations/product";
 
 export const GET = errorHandler(getProductByIdHandler);
 export const PUT = errorHandler(updateProductHandler);
 export const DELETE = errorHandler(deleteProductHandler);
 
 async function getProductByIdHandler(request, { params: { productId } }) {
-  await productIdSchema.validate(productId, { abortEarly: false });
+  await productIdValidationSchema.validate(productId, { abortEarly: false });
 
   const product = await getProductById(productId, {
     include: {
@@ -40,7 +36,7 @@ async function getProductByIdHandler(request, { params: { productId } }) {
 }
 
 async function updateProductHandler(request, { params: { productId } }) {
-  await productIdSchema.validate(productId, { abortEarly: false });
+  await productIdValidationSchema.validate(productId, { abortEarly: false });
 
   const {
     title,

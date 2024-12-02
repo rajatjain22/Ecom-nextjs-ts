@@ -6,7 +6,10 @@ export const validateEmail = (email: string): boolean => {
   return re.test(String(email).toLowerCase());
 };
 
-export const validateRequestBody = (body: RequestBody, required: string[]): string => {
+export const validateRequestBody = (
+  body: RequestBody,
+  required: string[]
+): string => {
   const missingFields: string[] = [];
 
   // Check if body is empty

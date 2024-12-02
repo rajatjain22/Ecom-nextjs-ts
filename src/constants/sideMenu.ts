@@ -1,4 +1,4 @@
-import { DashboardIcon } from "@/components/Icons";
+import { DashboardIcon, OrdersIcon } from "@/components/Icons";
 import { signOut } from "next-auth/react";
 import { SideMenuItem } from "@/components/layout/Sidebar/types";
 import HomeIcon from "@/components/Icons/Home.icon";
@@ -11,7 +11,7 @@ export const sideMenu: SideMenuItem[] = [
     route: "/admin",
   },
   {
-    icon: DashboardIcon,
+    icon: OrdersIcon,
     label: "Orders",
     route: "/admin/orders"
   },

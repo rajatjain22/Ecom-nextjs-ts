@@ -6,7 +6,7 @@ import OptionItem from "./OptionItem";
 import Card from "@/components/common/Card";
 import { useRouter } from "next/navigation";
 
-const VariantsSection = memo(({ formik, productId }: any) => {
+const VariantsSection = memo(({ formik, productId, variantFirstId }: any) => {
   const router = useRouter();
 
   const handleOptionChange = (index: number, name: string) => {
@@ -96,10 +96,10 @@ const VariantsSection = memo(({ formik, productId }: any) => {
           className="border text-gray-700 px-4 py-2 rounded"
           onClick={() =>
             productId !== "new" &&
-            formik.values.variants.length > 0 &&
-            router.push(`/admin/products/${productId}/variants`)
+            formik.values.variants &&
+            router.push(`/admin/products/${productId}/variants/${variantFirstId}`)
           }
-          disabled={productId === "new" || formik.values.variants.length === 0}
+          disabled={productId === "new" || !formik.values.variants}
         >
           Show variants
         </Button>
