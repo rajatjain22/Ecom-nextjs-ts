@@ -15,11 +15,11 @@ import SocialButton from "@/components/common/Button/SocialButton";
 import Card from "@/components/common/Card";
 
 // Utilities
-import { SIGNUP_INITIAL_VALUES, SIGNUP_SCHEMA } from "@/utilities/formValidations/auth";
+import { SIGNUP_INITIAL_VALUES, SIGNUP_SCHEMA } from "@/utilities/yupValidations/auth";
 
 // Define types for the form values
 interface SignupValues {
-  name: string;
+  firstName: string;
   email: string;
   password: string;
 }
@@ -63,7 +63,7 @@ const SignupForm: React.FC = () => {
           </h1>
 
           <form onSubmit={formik.handleSubmit} className="space-y-2">
-            {["name", "email"].map((field) => (
+            {["firstName", "email"].map((field) => (
               <Input
                 key={field}
                 id={field}
@@ -75,7 +75,7 @@ const SignupForm: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.touched[field as keyof SignupValues] ? formik.errors[field as keyof SignupValues] : undefined}
-                autoFocus={field === "name"}
+                autoFocus={field === "firstName"}
               />
             ))}
 

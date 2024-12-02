@@ -13,29 +13,24 @@ import { useFormik } from "formik";
 import Badge from "@/components/common/Badge";
 import Link from "next/link";
 
-import { ProductVariantValidationSchema } from "@/utilities/formValidations/product";
+import { productVariantValidationSchema } from "@/utilities/yupValidations/product";
 
-const VarinatForm = ({
-  productId,
-  variantId,
-}: {
-  productId: string;
-  variantId: string;
-}) => {
+const VarinatForm = ({ product, variant }: { product: any; variant: any }) => {
   const formik = useFormik<ProductvariantFormValuesType>({
     initialValues: {
-      media: [],
-      price: 0,
-      quantity: 0,
-      sku: "",
-      barcode: "",
-      weight: "",
-      weightType: "",
-      discount: "",
+      media: variant.images || [],
+      price: variant.price || 0,
+      quantity: variant.quantity || 0,
+      sku: variant.sku || "",
+      barcode: variant.barcode || "",
+      weight: variant.weight || "",
+      weightType: variant.weightType || "",
+      discount: variant.discount || "",
     },
-    validationSchema: ProductVariantValidationSchema,
-    onSubmit: (values) => {
-      console.log("Product added:", values);
+    validationSchema: productVariantValidationSchema,
+    onSubmit: (values, { setSubmitting }) => {
+      console.log("Variant update:", values);
+      setSubmitting(false);
     },
   });
 
@@ -48,7 +43,7 @@ const VarinatForm = ({
   };
 
   const getActiveLinkClass = (href: string) => {
-    return variantId === href
+    return variant.id === href
       ? "p-2 border rounded bg-primary text-white"
       : "p-2 border rounded";
   };
@@ -64,8 +59,9 @@ const VarinatForm = ({
         <Button
           type="submit"
           className="bg-primary text-white px-4 py-2 rounded"
+          disabled={formik.isSubmitting}
         >
-          Save
+          Update
         </Button>
       </div>
 
@@ -82,10 +78,14 @@ const VarinatForm = ({
               />
               <div>
                 <div className="flex gap-2">
-                  <h2 className="text-lg font-semibold">broken dust</h2>
-                  <Badge className="bg-green-50 text-green-700">Active</Badge>
+                  <h2 className="text-lg font-semibold">{product.title}</h2>
+                  <Badge className="bg-green-50 text-green-700">
+                    {product.isActive ? "Active" : "Draft"}
+                  </Badge>
                 </div>
-                <p className="text-gray-600">9 variants</p>
+                <p className="text-gray-600">
+                  {product.variants.length} variants
+                </p>
               </div>
             </div>
             <Input
@@ -95,40 +95,22 @@ const VarinatForm = ({
               className="mb-4"
             />
             <div className="flex flex-col space-y-2">
-              <Link href="1" className={getActiveLinkClass("1")}>
-                red / L
-              </Link>
-              <Link href="2" className={getActiveLinkClass("2")}>
-                red / XL
-              </Link>
-              <Link href="3" className={getActiveLinkClass("3")}>
-                red / XXL
-              </Link>
-              <Link href="4" className={getActiveLinkClass("4")}>
-                black / L
-              </Link>
-              <Link href="5" className={getActiveLinkClass("5")}>
-                black / XL
-              </Link>
-              <Link href="6" className={getActiveLinkClass("6")}>
-                black / XXL
-              </Link>
-              <Link href="7" className={getActiveLinkClass("7")}>
-                greed / L
-              </Link>
-              <Link href="8" className={getActiveLinkClass("8")}>
-                greed / XL
-              </Link>
-              <Link href="9" className={getActiveLinkClass("9")}>
-                greed / XXL
-              </Link>
+              {product.variants.map((item: { id: string; title: string }) => (
+                <Link
+                  key={item.id}
+                  href={item.id}
+                  className={getActiveLinkClass(item.id)}
+                >
+                  {item.title}
+                </Link>
+              ))}
             </div>
           </Card>
         </div>
         <div className="md:col-span-2 space-y-6">
           <Card className="space-y-4">
             <h3 className="text-lg font-semibold mb-4">Options</h3>
-            <span>Variant: test</span>
+            <span>Variant: {variant.title}</span>
             <FileUpload
               id="media"
               name="media"

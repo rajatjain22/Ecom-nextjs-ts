@@ -6,13 +6,12 @@ import { UploadIcon } from "@/components/Icons";
 const FileUpload: React.FC<FileUploadProps> = ({ id, label, name, onChange, multiple=false, files=[], accept, ...rest }) => {
   const acceptData = accept ? accept.map(e=>`image/${e.toLowerCase()}`).join(",") : "image/*";
 
-  useEffect(() => {
-    // Clean up object URLs when files are no longer needed
-    files.forEach((file) => {
-      const objectURL = URL.createObjectURL(file);
-      return () => URL.revokeObjectURL(objectURL);
-    });
-  }, [files]);
+  // useEffect(() => {
+  //   files.forEach((file) => {
+  //     const objectURL = URL.createObjectURL(file);
+  //     return () => URL.revokeObjectURL(objectURL);
+  //   });
+  // }, [files]);
 
   return (
     <div className="w-full">
@@ -40,7 +39,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ id, label, name, onChange, mult
           {files.map((file, index) => (
             <div key={index} className="relative w-24 h-24">
               <Image
-                src={URL.createObjectURL(file)} // Creating Object URL for the file
+                src={file?.url || URL.createObjectURL(file)} // Creating Object URL for the file
                 alt={file.name}
                 className="rounded-lg"
                 fill

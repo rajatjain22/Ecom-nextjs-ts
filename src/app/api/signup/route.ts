@@ -16,7 +16,7 @@ async function createUser(request: NextRequest) {
 
     // Validate input
     const validationError = validateRequestBody(body, [
-        "name",
+        "firstName",
         "email",
         "password",
     ]);
@@ -28,7 +28,7 @@ async function createUser(request: NextRequest) {
         );
     }
 
-    const { email, password, name } = body;
+    const { email, password, firstName } = body;
 
     // Check for existing user
     const existingUser = await getUserByEmail(email);
@@ -45,7 +45,7 @@ async function createUser(request: NextRequest) {
     // Create user
     await prisma.users.create({
         data: {
-            name: name as string,
+            firstName: firstName as string,
             email: email as string,
             password: hashedPassword,
         },

@@ -19,7 +19,7 @@ const OptionItem: React.FC<OptionItemType> = memo(({
 
   return (
     <div className="border rounded-lg p-4 mb-4">
-      {option.done || option?.id ? (
+      {option.done ? (
         <div className="cursor-pointer" onClick={() => onEdit(optionIndex)}>
           <h2 className="font-semibold">{option.name}</h2>
           <div className="flex gap-2">

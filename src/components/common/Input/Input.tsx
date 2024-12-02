@@ -1,7 +1,19 @@
-import { useState, ChangeEvent } from "react";
-import { CloseEyeIcon, DeleteIcon, OpenEyeIcon } from "@/components/Icons";
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  useState,
+  ForwardedRef,
+} from "react";
+import {
+  CloseEyeIcon,
+  CrossIcon,
+  DeleteIcon,
+  OpenEyeIcon,
+} from "@/components/Icons";
+import Badge from "../Badge";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "prefix"> {
   id: string;
   label?: string;
   inputSize?: string;
@@ -9,95 +21,159 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   type?: "text" | "password" | "email" | "number" | "date";
   error?: string;
-  prefix?: any;
+  prefix?: React.ReactNode; // Corrected type here
+  value: string | number;
+  tags?: string[];
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onTagChange?: (updatedTags: string[]) => void;
+  removeTag?: (index: number) => void;
   deleteOptionHandle?: () => void;
 }
 
-const Input: React.FC<InputProps> = ({
-  id,
-  label,
-  prefix,
-  inputSize = "",
-  type = "text",
-  name = "",
-  className = "",
-  placeholder = "",
-  error = "",
-  value = "",
-  onChange,
-  deleteOptionHandle,
-  ...rest
-}) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const errorClass = error ? "border border-red-600" : "";
-  const classes = `${errorClass} block w-full rounded-lg border border-gray-300 py-2 px-4 text-sm outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500 transition duration-200 ${inputSize} ${className}`;
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      id,
+      label,
+      prefix,
+      inputSize = "",
+      type = "text",
+      name = "",
+      className = "",
+      placeholder = "",
+      error = "",
+      value = "",
+      tags = [],
+      onTagChange,
+      removeTag,
+      onChange,
+      deleteOptionHandle,
+      ...rest
+    },
+    ref: ForwardedRef<HTMLInputElement>
+  ) => {
+    const [showPassword, setShowPassword] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+    const errorClass = error ? "border-red-600" : "border-gray-300";
+    const classes = [
+      "border block w-full rounded-lg py-2 px-4 text-sm outline-none transition duration-200",
+      "focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500",
+      errorClass,
+      inputSize,
+      className,
+      deleteOptionHandle || type === "password" ? "!pr-9" : "",
+      prefix ? "!pl-7" : "",
+    ].join(" ");
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (onChange) {
-      onChange(event);
-    }
-  };
+    const togglePasswordVisibility = () => {
+      setShowPassword((prev) => !prev);
+    };
 
-  return (
-    <div className="w-full">
-      {label && (
-        <label
-          htmlFor={id}
-          className="mb-2 inline-block text-sm font-medium text-gray-700"
-        >
-          {label}
-        </label>
-      )}
-      <div className="relative">
-        <input
-          type={showPassword ? "text" : type}
-          id={id}
-          name={name}
-          autoComplete="off"
-          className={`${classes} ${
-            deleteOptionHandle || type === "password" ? "!pr-9" : ""
-          } ${prefix ? "!pl-7" : ""}`}
-          placeholder={placeholder}
-          value={value}
-          onChange={handleChange}
-          aria-invalid={!!error}
-          {...rest}
-        />
-        {prefix && (
-          <span className="absolute top-3 left-2 cursor-pointer">{prefix}</span>
-        )}
-        {type === "password" && (
-          <div
-            className="absolute top-2 right-2 cursor-pointer"
-            onClick={togglePasswordVisibility}
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+      if (onChange) {
+        onChange(event);
+      }
+    };
+
+    const addTag = (event: KeyboardEvent<HTMLInputElement>) => {
+      if ((event.key === "Enter" || event.key === "Tab") && name === "tags") {
+        event.preventDefault();
+        const trimmedInput = value?.trim();
+        if (trimmedInput) {
+          const newTags = trimmedInput
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag && !tags.includes(tag));
+
+          if (onTagChange) {
+            onTagChange([...tags, ...newTags]);
+          }
+        }
+      }
+    };
+
+    const handleRemoveTag = (index: number) => {
+      if (removeTag) {
+        removeTag(index);
+      }
+    };
+
+    return (
+      <div className="w-full">
+        {label && (
+          <label
+            htmlFor={id}
+            className="mb-2 inline-block text-sm font-medium text-gray-700"
           >
-            {showPassword ? (
-              <CloseEyeIcon width={25} height={25} />
-            ) : (
-              <OpenEyeIcon width={25} height={25} /> 
-            )}
+            {label}
+          </label>
+        )}
+        <div className="relative">
+          <input
+            ref={ref}
+            type={showPassword ? "text" : type}
+            id={id}
+            name={name}
+            autoComplete="off"
+            className={classes}
+            placeholder={placeholder}
+            value={value}
+            onChange={handleChange}
+            onKeyDown={(e) => (name === "tags" ? addTag(e) : undefined)}
+            aria-invalid={!!error}
+            aria-describedby={error ? `${id}-error` : undefined}
+            {...rest}
+          />
+          {prefix && <span className="absolute top-3 left-2">{prefix}</span>}
+          {type === "password" && (
+            <div
+              className="absolute top-2 right-2 cursor-pointer"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? (
+                <CloseEyeIcon width={25} height={25} />
+              ) : (
+                <OpenEyeIcon width={25} height={25} />
+              )}
+            </div>
+          )}
+          {deleteOptionHandle && (
+            <div
+              className="absolute top-2 right-2 cursor-pointer"
+              onClick={deleteOptionHandle}
+            >
+              <DeleteIcon width={20} height={20} />
+            </div>
+          )}
+        </div>
+
+        {name === "tags" && Array.isArray(tags) && (
+          <div className="inline-flex gap-2 mt-2 text-wrap flex-wrap">
+            {tags.map((tag, index) => (
+              <Badge key={index}>
+                <span>{tag}</span>
+                <span
+                  className="cursor-pointer"
+                  onClick={() => handleRemoveTag(index)}
+                >
+                  <CrossIcon width={8} height={8} />
+                </span>
+              </Badge>
+            ))}
           </div>
         )}
-        {deleteOptionHandle && (
+
+        {error && (
           <div
-            className="absolute top-2 right-2 cursor-pointer"
-            onClick={deleteOptionHandle}
+            id={`${id}-error`}
+            className="text-red-600 mt-1 inline-block text-xs font-medium"
           >
-            <DeleteIcon width={20} height={20} />
+            {error}
           </div>
         )}
       </div>
-      {error && (
-        <div className="text-red-600 mt-1 inline-block text-xs font-medium">
-          {error}
-        </div>
-      )}
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default Input;

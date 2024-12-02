@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { useFormik } from "formik";
-import Select from "@/components/common/Input/Select"; // Assuming this is a custom select component
+import Select from "@/components/common/Input/Select";
 import Button from "@/components/common/Button";
 import Card from "@/components/common/Card";
 import GeneralInformation from "@/components/layout/Product/GeneralInformationSection";
@@ -12,41 +12,34 @@ import ProductOrganizationSection from "@/components/layout/Product/ProductOrgan
 import { ProductFormValuesType } from "@/components/layout/Product/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 
-import { ProductValidationSchema } from "@/utilities/formValidations/product";
+import { productValidationSchema } from "@/utilities/yupValidations/product";
 
-// Defining the types for the props
-interface ProductFormProps {
-  productId: string;
-}
-
-const ProductForm: React.FC<any> = ({ product }) => {
-  console.log(product)
-
-  // Formik Setup
+const ProductForm: React.FC<any> = memo(({ product }) => {
   const formik = useFormik<ProductFormValuesType>({
     initialValues: {
-      title: product.name || "",
-      descriptions: product.descriptions || "",
-      media: product.media || [],
-      category: product.category || "",
-      status: product.status || false,
-      price: product.price || 0,
-      productType: product.productType || "",
-      collections: product.collections || "",
-      options: product.options || [],
-      variants: product.variants || [],
-      tags: product.tsgs || "",
-      sku: product.sku || "",
-      barcode: product.barcode || "",
-      brand: product.brand || "",
-      weight: product.weight || "",
-      weightType: product.weightType || "",
-      quantity: product.quantity || 0,
-      discount: product.discount || "",
+      title: product?.title || "",
+      descriptions: product?.description || "",
+      media: product?.images || [],
+      category: product?.category || "",
+      status: product?.status || false,
+      price: product?.price || 0,
+      productType: product?.productType || "",
+      collections: product?.collections || "",
+      options: product?.options || [],
+      variants: product?.variants || false,
+      tags: product?.tags || "",
+      sku: product?.sku || "",
+      barcode: product?.barcode || "",
+      brand: product?.brand || "",
+      weight: product?.weight || "",
+      weightType: product?.weightType || "",
+      quantity: product?.quantity || 0,
+      discount: product?.discount || "",
     },
-    validationSchema: ProductValidationSchema,
-    onSubmit: (values) => {
+    validationSchema: productValidationSchema,
+    onSubmit: (values, { setSubmitting }) => {
       console.log("Product added:", values);
+      setSubmitting(false);
     },
   });
 
@@ -60,15 +53,18 @@ const ProductForm: React.FC<any> = ({ product }) => {
       {/* Title and Breadcrumb */}
       <div className="flex flex-row justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-semibold">Add New Product</h1>
+          <h1 className="text-2xl font-semibold">
+            {product ? "Product" : "Add New Product"}
+          </h1>
           <Breadcrumb />
         </div>
         <div className="flex space-x-2">
           <Button
             type="submit"
             className="bg-primary text-white px-4 py-2 rounded"
+            disabled={formik.isSubmitting}
           >
-            Save
+            {product ? "Update" : "Save"}
           </Button>
         </div>
       </div>
@@ -77,7 +73,11 @@ const ProductForm: React.FC<any> = ({ product }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
           <GeneralInformation formik={formik} />
-          <VariantsSection formik={formik} productId={product?.id} />
+          <VariantsSection
+            formik={formik}
+            productId={product?.id}
+            variantFirstId={product?.variantFirstId}
+          />
 
           {/* Conditional rendering of PricingSection */}
           {formik.values.options.length === 0 && (
@@ -112,6 +112,6 @@ const ProductForm: React.FC<any> = ({ product }) => {
       </div>
     </form>
   );
-};
+});
 
 export default ProductForm;

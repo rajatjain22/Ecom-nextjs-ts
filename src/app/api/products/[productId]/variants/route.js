@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/config/db.server";
 import { STATUS } from "@/constants/apiStatus";
-import { generateUniqueHandle } from "@/lib/products";
-import { productSchema } from "@/utilities/apiValidations/products";
-import { prepareOptionsAndValues, createCombinations } from "@/lib/products";
 import { errorHandler } from "@/errors/errorHandler";
 
 export const POST = errorHandler(createProductVariantHandler);

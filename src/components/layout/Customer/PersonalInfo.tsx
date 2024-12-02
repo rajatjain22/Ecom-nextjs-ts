@@ -12,7 +12,7 @@ const PersonalInfo = ({ formik }: any) => {
           placeholder="First Name"
           id="firstName"
           name="firstName"
-          value={formik.values.firstName}
+          value={formik.values.firstName ?? ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.firstName ? formik.errors.firstName : undefined}
@@ -22,7 +22,7 @@ const PersonalInfo = ({ formik }: any) => {
           placeholder="Last Name"
           id="lastName"
           name="lastName"
-          value={formik.values.lastName}
+          value={formik.values.lastName ?? ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.lastName ? formik.errors.lastName : undefined}
@@ -70,13 +70,16 @@ const PersonalInfo = ({ formik }: any) => {
         <Input
           label="Date of Birth"
           placeholder="Date of Birth"
-          id="birthDate"
-          name="birthDate"
+          id="dateOfBirth"
+          name="dateOfBirth"
           type="date"
-          value={formik.values.birthDate}
+          value={formik.values.dateOfBirth}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.birthDate ? formik.errors.birthDate : undefined}
+          error={
+            formik.touched.dateOfBirth ? formik.errors.dateOfBirth : undefined
+          }
+          max={new Date().toISOString().split("T")[0]}
         />
       </div>
     </Card>

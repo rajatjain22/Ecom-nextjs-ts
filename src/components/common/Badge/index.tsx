@@ -9,7 +9,7 @@ function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset ring-gray-500/10 ${className}`}
+      className={`inline-flex gap-2 items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset ring-gray-500/10 max-h-6 ${className}`}
     >
       {children}
     </span>

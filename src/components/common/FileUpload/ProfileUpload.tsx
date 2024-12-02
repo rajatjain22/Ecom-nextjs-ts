@@ -44,7 +44,7 @@ const ProfileUpload: React.FC<ProfileUploadProps> = ({
         <div className="flex flex-wrap justify-center gap-5 mt-2">
           <div className="relative w-48 h-48 ">
             <Image
-              src={URL.createObjectURL(files)}
+              src={files?.url || URL.createObjectURL(files)}
               alt={files.name}
               className="rounded-full"
               fill

@@ -6,7 +6,7 @@ interface LoginValues {
 }
 
 interface SignupValues {
-  name: string;
+  firstName: string;
   email: string;
   password: string;
 }
@@ -17,7 +17,7 @@ export const LOGIN_INITIAL_VALUES: LoginValues = {
 };
 
 export const SIGNUP_INITIAL_VALUES: SignupValues = {
-  name: '',
+  firstName: '',
   email: '',
   password: '',
 };
@@ -33,9 +33,9 @@ export const LOGIN_SCHEMA = Yup.object().shape({
 
 // Validation schema for the signup form
 export const SIGNUP_SCHEMA = Yup.object().shape({
-  name: Yup.string()
-    .min(3, 'Name must be at least 3 characters long')
-    .required('Name is required'),
+  firstName: Yup.string()
+    .min(3, 'First name must be at least 3 characters long')
+    .required('First name is required'),
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
