@@ -50,7 +50,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
   const [currentPageState, setCurrentPageState] = useState<number>(currentPage);
   const [loading, setLoading] = useState<boolean>(false); // Add loading state
 
-  let rows = currentProducts.map((product) => ({
+  const rows = currentProducts.map((product) => ({
     id: product.id,
     name: (
       <Link

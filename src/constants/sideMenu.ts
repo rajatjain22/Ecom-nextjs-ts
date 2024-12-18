@@ -19,21 +19,22 @@ export const sideMenu: SideMenuItem[] = [
     icon: ProductIcon,
     label: "Products",
     route: "/admin/products",
-    badge: 5,
+    children: [
+      { label: "Category", route: "/admin/products/category" },
+      { label: "Brand", route: "/admin/products/brands" },
+      { label: "Collection", route: "/admin/products/collections" },
+    ],
   },
+  // {
+  //   icon: ProductIcon,
+  //   label: "Products",
+  //   route: "/admin/products",
+  //   badge: 5,
+  // },
   {
     icon: UsersIcon,
     label: "Customers",
     route: "/admin/customers",
-  },
-  {
-    icon: DashboardIcon,
-    label: "Category",
-    route: "#",
-    children: [
-      { label: "Add Careers's", route: "/admin/careers/addCareers" },
-      { label: "View Careers's", route: "/admin/careers" },
-    ],
   },
   {
     icon: DashboardIcon,

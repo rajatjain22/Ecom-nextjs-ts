@@ -29,9 +29,10 @@ async function fetchProductData(productId: string | undefined) {
     return null;
   }
 
+  console.log(product)
   return {
     ...product,
-    price: product.price ? product.price.toNumber() : undefined,
+    price: product.price ? Number(product?.price) : undefined,
     discount: product.discount ? product.discount.toNumber() : undefined,
     tax: product.tax ? product.tax.toNumber() : undefined,
     variants: product.variants.length > 0,

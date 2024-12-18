@@ -261,7 +261,6 @@ export const getAllProducts = async ({
           options: {
             include: { values: true },
           },
-          categories: true,
         },
       }),
       prisma.product.count(),
@@ -304,6 +303,129 @@ export const getAllProducts = async ({
     };
   } catch (error) {
     console.error("Error fetching all products:", error);
+    return null;
+    // throw new CustomError(
+    //   "Failed to retrieve products data",
+    //   STATUS.BAD_REQUEST
+    // );
+  }
+};
+
+export const getAllProductCategories = async ({
+  page = 1,
+  limit = 10,
+  ...options
+}: {
+  page?: number;
+  limit?: number;
+  [key: string]: any;
+} = {}): Promise<any> => {
+  "use server";
+  try {
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    const [category, totalCount] = await Promise.all([
+      prisma.productCategory.findMany({
+        skip,
+        take,
+        ...options,
+      }),
+      prisma.product.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      category,
+      totalCount,
+      totalPages,
+      page,
+    };
+  } catch (error) {
+    console.error("Error fetching all categories:", error);
+    return null;
+    // throw new CustomError(
+    //   "Failed to retrieve products data",
+    //   STATUS.BAD_REQUEST
+    // );
+  }
+};
+
+export const getAllProductBrands = async ({
+  page = 1,
+  limit = 10,
+  ...options
+}: {
+  page?: number;
+  limit?: number;
+  [key: string]: any;
+} = {}): Promise<any> => {
+  "use server";
+  try {
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    const [brands, totalCount] = await Promise.all([
+      prisma.productBrand.findMany({
+        skip,
+        take,
+        ...options,
+      }),
+      prisma.product.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      brands,
+      totalCount,
+      totalPages,
+      page,
+    };
+  } catch (error) {
+    console.error("Error fetching all brands:", error);
+    return null;
+    // throw new CustomError(
+    //   "Failed to retrieve products data",
+    //   STATUS.BAD_REQUEST
+    // );
+  }
+};
+
+export const getAllProductCollections = async ({
+  page = 1,
+  limit = 10,
+  ...options
+}: {
+  page?: number;
+  limit?: number;
+  [key: string]: any;
+} = {}): Promise<any> => {
+  "use server";
+  try {
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    const [collections, totalCount] = await Promise.all([
+      prisma.productCollection.findMany({
+        skip,
+        take,
+        ...options,
+      }),
+      prisma.product.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      collections,
+      totalCount,
+      totalPages,
+      page,
+    };
+  } catch (error) {
+    console.error("Error fetching all collections:", error);
     return null;
     // throw new CustomError(
     //   "Failed to retrieve products data",

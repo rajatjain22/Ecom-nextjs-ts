@@ -26,38 +26,63 @@ model Users {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @default(now()) @updatedAt
 
-  images           Image[]
-  orders           Order[]
+  images Image[]
+  orders Order[]
 }
 
 model Product {
-  id          String            @id @default(cuid())
-  title       String            @db.VarChar(255)
-  description String?           @db.Text
-  handle      String            @unique @db.VarChar(255)
-  productType String?           @db.VarChar(100)
-  quantity    Int               @default(0)
-  price       Decimal           @default(0.00) @db.Decimal(10, 2)
-  discount    Decimal?          @db.Decimal(5, 2)
-  tax         Decimal?          @db.Decimal(5, 2)
-  isActive    Boolean           @default(false)
-  sku         String?           @db.VarChar(50)
-  tags        String?           @db.VarChar(50)
-  barcode     String?           @db.VarChar(255)
-  weight      Decimal?          @db.Decimal(10, 2)
-  weightType  String?           @db.VarChar(50)
-  brandId     String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @default(now()) @updatedAt
-  images      Image[]
-  brand       ProductBrand?     @relation(fields: [brandId], references: [id])
-  categories  ProductCategory[]
-  options     ProductOption[]
-  reviews     ProductReview[]
-  variants    ProductVariant[]
-  orderItems  OrderItem[]
+  id           String   @id @default(cuid())
+  title        String   @db.VarChar(255)
+  description  String?  @db.Text
+  handle       String   @unique @db.VarChar(255)
+  productType  String?  @db.VarChar(100)
+  quantity     Int      @default(0)
+  price        Decimal  @default(0.00) @db.Decimal(10, 2)
+  discount     Decimal? @db.Decimal(5, 2)
+  tax          Decimal? @db.Decimal(5, 2)
+  isActive     Boolean  @default(false)
+  sku          String?  @db.VarChar(50)
+  tags         String?  @db.VarChar(50)
+  barcode      String?  @db.VarChar(255)
+  weight       Decimal? @db.Decimal(10, 2)
+  weightType   String?  @db.VarChar(50)
+  brandId      String?
+  categoryID   String?
+  collectionId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  images     Image[]
+  brand      ProductBrand?      @relation(fields: [brandId], references: [id])
+  categories ProductCategory?   @relation(fields: [categoryID], references: [id])
+  collection ProductCollection? @relation(fields: [collectionId], references: [id])
+  options    ProductOption[]
+  reviews    ProductReview[]
+  variants   ProductVariant[]
+  orderItems OrderItem[]
 
   @@index([brandId], map: "Product_brandId_fkey")
+}
+
+model ProductVariant {
+  id              String      @id @default(cuid())
+  productId       String
+  title           String      @db.VarChar(255)
+  price           Decimal?    @db.Decimal(10, 2)
+  position        Int         @default(1)
+  sku             String?     @unique @db.VarChar(100)
+  option1         String?
+  option2         String?
+  option3         String?
+  quantityInStock Int         @default(0)
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  images          Image[]
+  product         Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems      OrderItem[]
+
+  @@index([productId], map: "ProductVariant_productId_fkey")
 }
 
 model Image {
@@ -115,12 +140,10 @@ model ProductOptionValue {
 }
 
 model ProductCategory {
-  id        String  @id @default(cuid())
-  productId String
-  value     String  @db.VarChar(255)
-  product   Product @relation(fields: [productId], references: [id])
+  id   String @id @default(cuid())
+  name String @unique @db.VarChar(255)
 
-  @@index([productId], map: "ProductCategory_productId_fkey")
+  products Product[]
 }
 
 model ProductBrand {
@@ -129,25 +152,14 @@ model ProductBrand {
   products Product[]
 }
 
-model ProductVariant {
-  id              String   @id @default(cuid())
-  productId       String
-  title           String   @db.VarChar(255)
-  price           Decimal? @db.Decimal(10, 2)
-  position        Int      @default(1)
-  sku             String?  @unique @db.VarChar(100)
-  option1         String?
-  option2         String?
-  option3         String?
-  quantityInStock Int      @default(0)
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  images          Image[]
-  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  orderItems      OrderItem[]
+model ProductCollection {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(255)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  @@index([productId], map: "ProductVariant_productId_fkey")
+  products Product[]
 }
 
 enum Role {
@@ -157,19 +169,19 @@ enum Role {
 }
 
 model Order {
-  id              String          @id @default(cuid())
+  id              String        @id @default(cuid())
   userId          String
-  orderNumber     String          @unique @db.VarChar(255)
-  status          OrderStatus     @default(pending)
-  totalAmount     Decimal         @db.Decimal(10, 2)
-  paymentStatus   PaymentStatus   @default(pending)
+  orderNumber     String        @unique @db.VarChar(255)
+  status          OrderStatus   @default(pending)
+  totalAmount     Decimal       @db.Decimal(10, 2)
+  paymentStatus   PaymentStatus @default(pending)
   shippingAddress String?
   billingAddress  String?
   placedAt        DateTime?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   items           OrderItem[]
-  user            Users           @relation(fields: [userId], references: [id])
+  user            Users         @relation(fields: [userId], references: [id])
   payments        Payment[]
   refunds         Refund[]
 
@@ -177,18 +189,18 @@ model Order {
 }
 
 model OrderItem {
-  id              String       @id @default(cuid())
-  orderId         String
-  productId       String
+  id               String          @id @default(cuid())
+  orderId          String
+  productId        String
   productVariantId String?
-  productName     String       @db.VarChar(255)
-  quantity        Int          @default(1)
-  price            Decimal        @default(0.00) @db.Decimal(10, 2) // Set a default value
-  totalPrice       Decimal        @db.Decimal(10, 2) // quantity * unitPrice
-  product          Product        @relation(fields: [productId], references: [id])
+  productName      String          @db.VarChar(255)
+  quantity         Int             @default(1)
+  price            Decimal         @default(0.00) @db.Decimal(10, 2) // Set a default value
+  totalPrice       Decimal         @db.Decimal(10, 2) // quantity * unitPrice
+  product          Product         @relation(fields: [productId], references: [id])
   productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
-  order           Order        @relation(fields: [orderId], references: [id])
-  refunds         Refund[]
+  order            Order           @relation(fields: [orderId], references: [id])
+  refunds          Refund[]
 
   @@index([orderId], map: "OrderItem_orderId_fkey")
   @@index([productId], map: "OrderItem_productId_fkey")
@@ -196,29 +208,29 @@ model OrderItem {
 }
 
 model Payment {
-  id             String       @id @default(cuid())
-  orderId        String
-  amount         Decimal      @db.Decimal(10, 2)
-  paymentStatus  PaymentStatus
-  paymentMethod  PaymentMethod?
-  paymentDate    DateTime     @default(now())
-  transactionId  String?      @db.VarChar(255)
-  order          Order        @relation(fields: [orderId], references: [id])
+  id            String         @id @default(cuid())
+  orderId       String
+  amount        Decimal        @db.Decimal(10, 2)
+  paymentStatus PaymentStatus
+  paymentMethod PaymentMethod?
+  paymentDate   DateTime       @default(now())
+  transactionId String?        @db.VarChar(255)
+  order         Order          @relation(fields: [orderId], references: [id])
 
   @@index([orderId], map: "Payment_orderId_fkey")
 }
 
 model Refund {
-  id              String       @id @default(cuid())
-  orderId         String
-  orderItemId     String?
-  reason          String       @db.Text
-  status          RefundStatus @default(pending)
-  amount          Decimal      @default(0.00) @db.Decimal(10, 2)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  order           Order        @relation(fields: [orderId], references: [id])
-  orderItem       OrderItem?   @relation(fields: [orderItemId], references: [id])
+  id          String       @id @default(cuid())
+  orderId     String
+  orderItemId String?
+  reason      String       @db.Text
+  status      RefundStatus @default(pending)
+  amount      Decimal      @default(0.00) @db.Decimal(10, 2)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  order       Order        @relation(fields: [orderId], references: [id])
+  orderItem   OrderItem?   @relation(fields: [orderItemId], references: [id])
 }
 
 enum PaymentMethod {

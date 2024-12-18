@@ -13,15 +13,33 @@ import { ProductFormValuesType } from "@/components/layout/Product/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 
 import { productValidationSchema } from "@/utilities/yupValidations/product";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 const ProductForm: React.FC<any> = memo(({ product }) => {
+  const mutation = useMutation({
+    mutationFn: async (values: ProductFormValuesType) => {
+      const response = await axios.post("/api/products", values);
+      return response.data;
+    },
+    onError: (error: unknown) => {
+      const errorMessage =
+        axios.isAxiosError(error) && error.response?.data?.error
+          ? error.response.data.error
+          : "An unexpected error occurred. Please try again.";
+    },
+    onSuccess: (res: any) => {
+      console.log("Product created successfully", res);
+    },
+  });
+
   const formik = useFormik<ProductFormValuesType>({
     initialValues: {
       title: product?.title || "",
       descriptions: product?.description || "",
       media: product?.images || [],
       category: product?.category || "",
-      status: product?.status || false,
+      isActive: product?.isActive || false,
       price: product?.price || 0,
       productType: product?.productType || "",
       collections: product?.collections || "",
@@ -31,14 +49,14 @@ const ProductForm: React.FC<any> = memo(({ product }) => {
       sku: product?.sku || "",
       barcode: product?.barcode || "",
       brand: product?.brand || "",
-      weight: product?.weight || "",
+      weight: product?.weight || 0,
       weightType: product?.weightType || "",
       quantity: product?.quantity || 0,
-      discount: product?.discount || "",
+      discount: product?.discount || 0 ,
     },
     validationSchema: productValidationSchema,
     onSubmit: (values, { setSubmitting }) => {
-      console.log("Product added:", values);
+      mutation.mutate(values)
       setSubmitting(false);
     },
   });
@@ -96,12 +114,12 @@ const ProductForm: React.FC<any> = memo(({ product }) => {
               ]}
               name="status"
               id="status"
-              value={formik.values.status ? 1 : 0}
+              value={formik.values.isActive ? 1 : 0}
               onChange={handleStatusChange}
               onBlur={formik.handleBlur}
               error={
-                formik.touched.status && formik.errors.status
-                  ? formik.errors.status
+                formik.touched.isActive && formik.errors.isActive
+                  ? formik.errors.isActive
                   : undefined
               }
             />

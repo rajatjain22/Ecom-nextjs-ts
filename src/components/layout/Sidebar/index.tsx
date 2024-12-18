@@ -12,7 +12,7 @@ const Sidebar: React.FC<SidebarType> = memo(({ sidebarOpen, setSidebarOpen }) =>
 
   return (
     <aside
-      className={`z-10 fixed top-0 left-0 h-screen max-w-[var(--w-side)] w-full bg-white rounded-xl p-4 shadow-xl transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      className={`z-10 fixed top-0 left-0 h-screen max-w-[var(--w-side)] w-full flex flex-col bg-white rounded-xl p-4 shadow-xl transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       role="navigation"
       aria-label="Sidebar Navigation"
@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarType> = memo(({ sidebarOpen, setSidebarOpen }) =>
         <button
           aria-label="Close Sidebar"
           onClick={handleClose}
-          className="absolute -right-6 top-5 h-6 w-6 p-[6px] flex items-center justify-center bg-primary rounded-full"
+          className="absolute -right-7 top-5 h-6 w-6 p-[6px] flex items-center justify-center bg-primary rounded-full"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarType> = memo(({ sidebarOpen, setSidebarOpen }) =>
       </header>
 
       {/* Main Navigation */}
-      <ul className="flex-1 gap-1 p-2 font-sans text-base text-blue-gray-700">
+      <ul className="flex-1 gap-1 p-2 font-sans text-base text-blue-gray-700 overflow-y-auto">
         {
           sideMenu.map((menuItem, index) => (
             <SidebarItem

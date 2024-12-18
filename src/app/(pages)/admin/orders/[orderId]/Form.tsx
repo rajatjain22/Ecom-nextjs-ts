@@ -10,6 +10,8 @@ import Textarea from "@/components/common/Input/Textarea";
 import { CrossIcon, SearchIcon } from "@/components/Icons";
 import Image from "next/image";
 import Autocomplete from "@/components/common/Input/AutoComplete";
+import Modal from "@/components/common/Modal";
+import ProductResorcePicker from "./ProductResorcePicker";
 
 function OrderForm() {
   const [tags, setTags] = useState<string[]>(["sdfsdf", "sdf", "sdfd"]);
@@ -253,6 +255,88 @@ function OrderForm() {
           </Card>
         </div>
       </div>
+
+      <ProductResorcePicker />
+
+      {/* <Modal open={true} onClose={() => {}}>
+        <div class="px-4 py-3 border-b">
+          <div class="flex gap-3">
+            <div class="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search products"
+                class="w-full pl-10 pr-4 py-2 border !rounded-button"
+              />
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+            <button class="px-4 py-2 border !rounded-button hover:bg-gray-50">
+              <i class="fas fa-filter mr-2"></i>
+              Filter
+            </button>
+          </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-4">
+          <div class="py-4 border-b">
+            <div class="flex items-start gap-4">
+              <img
+                src="https://ai-public.creatie.ai/gen_page/product_placeholder.png"
+                alt="Product"
+                class="w-12 h-12 object-cover !rounded-button"
+              />
+              <div class="flex-1">
+                <h3 class="font-medium">Broken dust</h3>
+                <div class="space-y-2 mt-2">
+                  <label class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <input type="checkbox" class="mr-3" />
+                      <span>Red / L</span>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                      <span class="mr-4">16 available</span>
+                      <span>₹44.01</span>
+                    </div>
+                  </label>
+                  <label class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <input type="checkbox" class="mr-3" />
+                      <span>Red / XL</span>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                      <span class="mr-4">0 available</span>
+                      <span>₹44.01</span>
+                    </div>
+                  </label>
+                  <label class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <input type="checkbox" class="mr-3" />
+                      <span>Red / XXL</span>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                      <span class="mr-4">0 available</span>
+                      <span>₹44.01</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-4 py-3 border-t bg-white">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">3/500 variants selected</span>
+            <div class="space-x-3">
+              <button class="px-4 py-2 text-gray-700 border !rounded-button hover:bg-gray-50">
+                Cancel
+              </button>
+              <button class="px-4 py-2 bg-custom text-white !rounded-button hover:bg-gray-800">
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal> */}
     </form>
   );
 }

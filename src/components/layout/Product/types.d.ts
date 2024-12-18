@@ -25,7 +25,7 @@ export interface ProductFormValuesType {
   descriptions: string;
   media: any;
   category: string;
-  status: boolean;
+  isActive: boolean;
   price: number;
   productType: string;
   collections: string;

@@ -62,7 +62,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       inputSize,
       className,
       deleteOptionHandle || type === "password" ? "!pr-9" : "",
-      prefix ? "!pl-7" : "",
+      prefix ? "!pl-9" : "",
     ].join(" ");
 
     const togglePasswordVisibility = () => {
@@ -124,7 +124,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             aria-describedby={error ? `${id}-error` : undefined}
             {...rest}
           />
-          {prefix && <span className="absolute top-3 left-2">{prefix}</span>}
+          {prefix && <span className="absolute top-3 left-3">{prefix}</span>}
           {type === "password" && (
             <div
               className="absolute top-2 right-2 cursor-pointer"
