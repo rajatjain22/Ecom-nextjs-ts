@@ -23,7 +23,7 @@ interface TableProps {
     limit?: number;
   };
   onPageChange: (page: number) => void;
-  notFoundText?: string
+  notFoundText?: string;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -31,7 +31,7 @@ const Table: React.FC<TableProps> = ({
   columns,
   pagination: { currentPage, totalCount, totalPages, limit = 10 },
   onPageChange,
-  notFoundText = "No data found"
+  notFoundText = "No data found",
 }) => {
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
   const [sortConfig, setSortConfig] = useState<{
@@ -126,90 +126,101 @@ const Table: React.FC<TableProps> = ({
         <div className="flex gap-2">
           <button
             onClick={handleEdit}
-            className={`text-sm py-2 px-4 rounded ${!isRowSelected
-              ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
-              : "bg-green-500 text-white"
-              }`}
+            className={`text-sm py-2 px-4 rounded ${
+              !isRowSelected
+                ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
+                : "bg-green-500 text-white"
+            }`}
             disabled={!isRowSelected}
           >
             Edit
           </button>
           <button
             onClick={handleDelete}
-            className={`text-sm py-2 px-4 rounded ${!isRowSelected
-              ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
-              : "bg-red-500 text-white"
-              }`}
+            className={`text-sm py-2 px-4 rounded ${
+              !isRowSelected
+                ? "border bg-gray-100 text-gray-600 cursor-not-allowed"
+                : "bg-red-500 text-white"
+            }`}
             disabled={!isRowSelected}
           >
             Delete
           </button>
         </div>
       </div>
-      <table className="w-full text-left table-auto min-w-max">
-        <thead className="whitespace-nowrap capitalize bg-gray-50">
-          <tr>
-            <th className="pl-4 w-8 border-b border-blue-gray-100 bg-blue-gray-50 text-left text-sm font-semibold text-black cursor-pointer">
-              <InputChecks
-                id="headerCheckbox"
-                name="headerCheckbox"
-                type="checkbox"
-                checked={rows.length > 0 && checkedItems.size === rows.length}
-                onChange={handleSelectAll}
-              />
-            </th>
-            {columns.map((column) => (
-              <th
-                key={column.accessor}
-                className="p-4 border-b border-blue-gray-100 bg-blue-gray-50 text-left text-sm font-semibold text-black cursor-pointer"
-                onClick={() => handleSort(column.accessor)}
-              >
-                {column.header}{" "}
-                {sortConfig?.key === column.accessor &&
-                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="whitespace-nowrap">
-          {currentEntries.length ? currentEntries.map((row, index) => (
-            <tr key={index} className="hover:bg-blue-50">
-              <td className="pl-4 w-8 border-b border-blue-gray-50">
+      <div className="overflow-x-auto scrollbar">
+        <table className="w-full text-left table-auto min-w-max">
+          <thead className="whitespace-nowrap capitalize bg-gray-50">
+            <tr>
+              <th className="pl-4 w-8 border-b border-blue-gray-100 bg-blue-gray-50 text-left text-sm font-semibold text-black cursor-pointer">
                 <InputChecks
-                  id={`valueCheckbox${index}`}
-                  name="valueCheckbox"
+                  id="headerCheckbox"
+                  name="headerCheckbox"
                   type="checkbox"
-                  checked={checkedItems.has(index)}
-                  onChange={() => handleCheckboxChange(index)}
+                  checked={rows.length > 0 && checkedItems.size === rows.length}
+                  onChange={handleSelectAll}
                 />
-              </td>
+              </th>
               {columns.map((column) => (
-                <td
+                <th
                   key={column.accessor}
-                  className="p-4 text-sm border-b border-blue-gray-50"
+                  className="p-4 border-b border-blue-gray-100 bg-blue-gray-50 text-left text-sm font-semibold text-black cursor-pointer"
+                  onClick={() => handleSort(column.accessor)}
                 >
-                  {row[column.accessor]}
-                </td>
+                  {column.header}{" "}
+                  {sortConfig?.key === column.accessor &&
+                    (sortConfig.direction === "ascending" ? "↑" : "↓")}
+                </th>
               ))}
             </tr>
-          )) : <tr>
-            <td colSpan={columns.length + 1} className="p-4">
-              <div className="flex items-center justify-center">
-                <span className="text-gray-500 text-md">{notFoundText}</span>
-              </div>
-            </td>
-          </tr>}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="whitespace-nowrap">
+            {currentEntries.length ? (
+              currentEntries.map((row, index) => (
+                <tr key={index} className="hover:bg-blue-50">
+                  <td className="pl-4 w-8 border-b border-blue-gray-50">
+                    <InputChecks
+                      id={`valueCheckbox${index}`}
+                      name="valueCheckbox"
+                      type="checkbox"
+                      checked={checkedItems.has(index)}
+                      onChange={() => handleCheckboxChange(index)}
+                    />
+                  </td>
+                  {columns.map((column) => (
+                    <td
+                      key={column.accessor}
+                      className="p-4 text-sm border-b border-blue-gray-50"
+                    >
+                      {row[column.accessor]}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length + 1} className="p-4">
+                  <div className="flex items-center justify-center">
+                    <span className="text-gray-500 text-md">
+                      {notFoundText}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       {totalPages > 1 && (
         <div className="flex items-center justify-end m-4 gap-2">
           {Array.from({ length: totalPages }, (_, index) => (
             <Button
               key={index + 1}
-              className={`flex items-center justify-center cursor-pointer w-7 h-7 border rounded ${currentPage === index + 1
-                ? "bg-[#007bff] text-white"
-                : "text-gray-500"
-                }`}
+              className={`flex items-center justify-center cursor-pointer w-7 h-7 border rounded ${
+                currentPage === index + 1
+                  ? "bg-[#007bff] text-white"
+                  : "text-gray-500"
+              }`}
               onClick={() => handlePageChange(index + 1)} // Update page on click
             >
               {index + 1}

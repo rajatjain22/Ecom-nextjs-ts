@@ -47,7 +47,8 @@ function getPaginationParams(request) {
 async function createProductHandler(request) {
   const body = await request.json();
 
-  await productValidationSchema.validate(body, { abortEarly: false });
+  const dd = await productValidationSchema.validate(body, { abortEarly: false });
+  console.log(dd)
 
   const {
     title,

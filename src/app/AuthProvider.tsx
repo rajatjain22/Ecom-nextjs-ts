@@ -31,7 +31,7 @@ const AuthProvider = ({ children, session }: AuthProviderProps) => {
       <SessionProvider session={session}>
         {!isPublicPath && !isAdminPath && <Header />}
         {!isPublicPath && isAdminPath && <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
-        <main className={` transition-transform duration-300 ease-in-out ml-0 ${!isPublicPath && sidebarOpen && 'md:ml-[--w-side]'}`}>
+        <main className={` transition-all duration-300 ease-in-out ml-0 ${!isPublicPath && sidebarOpen && 'md:ml-[--w-side]'}`}>
           {children}
         </main>
         {!isPublicPath && !isAdminPath && <Footer />}

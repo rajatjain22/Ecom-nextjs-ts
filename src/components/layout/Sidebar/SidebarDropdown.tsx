@@ -20,8 +20,8 @@ const SidebarDropdown: React.FC<SidebarDropdownProps> = memo(({ item }) => {
         <li key={index}>
           <Link
             href={menuItem.route}
-            className={`group relative flex items-center gap-2.5 rounded-md px-10 duration-300 ease-in-out hover:text-white ${
-              pathname === menuItem.route ? "text-black" : "text-gray-600"
+            className={`group relative flex items-center gap-2.5 rounded-md px-10 duration-300 ease-in-out ${
+              pathname === menuItem.route ? "text-primary font-bold" : "text-gray-600"
             }`}
           >
             {menuItem.label}

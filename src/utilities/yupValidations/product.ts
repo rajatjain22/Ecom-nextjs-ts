@@ -16,7 +16,7 @@ const createRequiredIfNoOptions = (
     if (options[0].length === 0) {
       return fieldSchema.required(`${fieldName} is required`);
     } else {
-      return fieldSchema.notRequired();
+      return fieldSchema.optional();
     }
   });
 };
@@ -29,18 +29,18 @@ export const productValidationSchema = Yup.object({
     .max(100, "Title cannot exceed 100 characters."),
 
   description: Yup.string()
-    .optional()
-    .max(1000, "Description cannot exceed 1000 characters."),
+    .max(1000, "Description cannot exceed 1000 characters.")
+    .optional(),
 
-  files: Yup.array().of(Yup.mixed()).notRequired(),
+  files: Yup.array().of(Yup.mixed()).optional(),
 
   productType: Yup.string()
-    .optional()
     .matches(
-      /^[a-zA-Z\s]+$/,
+      /^[a-zA-Z\s]*$/,
       "Product type must only contain letters and spaces."
     )
-    .max(50, "Product type cannot exceed 50 characters."),
+    .max(50, "Product type cannot exceed 50 characters.")
+    .optional(),
 
   collections: Yup.string().required("Collections is required"),
 
@@ -61,26 +61,27 @@ export const productValidationSchema = Yup.object({
   tags: Yup.string().required("Tags are required"),
   category: Yup.string().required("Category is required"),
   isActive: Yup.boolean().required("isActive is required"),
-  sku: Yup.string().notRequired(),
+  sku: Yup.string().optional(),
   brand: Yup.string().required("Brand is required"),
   weight: Yup.number()
-    .positive("Weight must be a positive number")
-    .notRequired(),
+    .integer("Weight must be a integer")
+    .min(0, "Weight cannot be negative")
+    .optional(),
   weightType: Yup.string().when("weight", (val) => {
     if (val[0]) {
       return Yup.string().required("Weight type is required");
     } else {
-      return Yup.string().notRequired();
+      return Yup.string().optional();
     }
   }),
   discount: Yup.number()
     .integer("Discount must be an integer")
     .min(0, "Discount cannot be negative")
-    .notRequired(),
+    .optional(),
 });
 
 export const productVariantValidationSchema = Yup.object({
-  files: Yup.array().of(Yup.mixed()).notRequired(),
+  files: Yup.array().of(Yup.mixed()).optional(),
   price: Yup.number()
     .integer("Price must be an integer")
     .min(0, "Price cannot be negative")
@@ -89,24 +90,29 @@ export const productVariantValidationSchema = Yup.object({
     .integer("Quantity must be an integer")
     .min(0, "Quantity cannot be negative")
     .required("Quantity is required"),
-  sku: Yup.string().notRequired(),
-  barcode: Yup.string().notRequired(),
+  sku: Yup.string().optional(),
+  barcode: Yup.string().optional(),
   brand: Yup.string().required("Brand is required"),
-  weight: Yup.number()
-    .positive("Weight must be a positive number")
-    .notRequired(),
+  weight: Yup.number().positive("Weight must be a positive number").optional(),
   weightType: Yup.string().when("weight", (val) => {
     if (val[0]) {
       return Yup.string().required("Weight type is required");
     } else {
-      return Yup.string().notRequired();
+      return Yup.string().optional();
     }
   }),
   discount: Yup.number()
     .positive("Discount must be a positive number")
-    .notRequired(),
+    .optional(),
 });
 
 export const productIdValidationSchema = Yup.string()
   .required("Product ID is required.")
   .typeError("Product ID must be a string.");
+
+export const productCollectionvalidationSchema = Yup.object({
+  name: Yup.string()
+    .required("Category name is required")
+    .min(3, "Category name must be at least 3 characters"),
+  description: Yup.string().required("Description is required"),
+});
