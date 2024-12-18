@@ -15,3 +15,7 @@ export const comparePassword = async (plainPassword: string, hashedPassword: str
   const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
   return isMatch;
 };
+
+export const delay = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
