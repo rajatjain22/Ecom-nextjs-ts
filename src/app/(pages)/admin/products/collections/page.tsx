@@ -1,5 +1,5 @@
 import React from "react";
-import { getAllProductCollections } from "@/lib/products";
+import { createProductCollection, getAllProductCollections } from "@/lib/products";
 import CollectionTable from "./CollectionTable";
 
 const Page = async () => {
@@ -9,6 +9,7 @@ const Page = async () => {
     <CollectionTable
       collections={collections}
       getAllProductCollections={getAllProductCollections}
+      createProductCollection={createProductCollection}
       totalCount={totalCount}
       totalPages={totalPages}
       currentPage={page}
