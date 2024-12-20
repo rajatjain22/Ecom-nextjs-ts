@@ -1,4 +1,10 @@
-import { getProductById } from "@/lib/products";
+import {
+  createProduct,
+  getProductById,
+  getAllProductBrands,
+  getAllProductCollections,
+  getAllProductCategories
+} from "@/services/product.service";
 import ProductForm from "./Form";
 import { notFound } from "next/navigation";
 
@@ -12,6 +18,14 @@ async function fetchProductData(productId: string | undefined) {
           values: true,
         },
       },
+      category: true,
+      collection: {
+        select: {
+          id: true,
+          name: true
+        },
+      },
+      brand: true,
       images: {
         select: {
           url: true,
@@ -29,7 +43,6 @@ async function fetchProductData(productId: string | undefined) {
     return null;
   }
 
-  console.log(product)
   return {
     ...product,
     price: product.price ? Number(product?.price) : undefined,
@@ -57,5 +70,13 @@ export default async function Page({
 
   if (productId !== "new" && !product) return notFound();
 
-  return <ProductForm product={product} />;
+  return (
+    <ProductForm
+      product={product}
+      createProduct={createProduct}
+      getAllProductBrands={getAllProductBrands}
+      getAllProductCollections={getAllProductCollections}
+      getAllProductCategories={getAllProductCategories}
+    />
+  );
 }

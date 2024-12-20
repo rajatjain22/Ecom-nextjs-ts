@@ -1,4 +1,5 @@
-import { getProductById } from "@/lib/products";
+
+import { getProductById } from "@/services/product.service";
 import VarinatForm from "./Form";
 
 export default async function Page({

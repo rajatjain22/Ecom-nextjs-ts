@@ -5,7 +5,7 @@ import { MESSAGES } from "@/constants/apiMessages";
 import { Prisma } from "@prisma/client";
 import { Context, HandlerFunction, ValidationError } from "./interface";
 
-export const errorHandler = (handler: HandlerFunction) => {
+export const apiErrorHandler = (handler: HandlerFunction) => {
   return async (request: NextRequest, context: Context): Promise<NextResponse> => {
     try {
       return await handler(request, context);

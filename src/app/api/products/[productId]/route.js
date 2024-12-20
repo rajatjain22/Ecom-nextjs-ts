@@ -1,14 +1,15 @@
 import prisma from "@/config/db.server";
 import { MESSAGES } from "@/constants/apiMessages";
 import { STATUS } from "@/constants/apiStatus";
-import { errorHandler } from "@/errors/errorHandler";
-import { createCombinations, getProductById } from "@/lib/products";
+import { apiErrorHandler } from "@/errors/apiErrorHandler";
+import { createCombinations } from "@/lib/products";
+import { getProductById } from "@/services/product.service";
 import { NextResponse } from "next/server";
 import { productIdValidationSchema } from "@/utilities/validations/product";
 
-export const GET = errorHandler(getProductByIdHandler);
-export const PUT = errorHandler(updateProductHandler);
-export const DELETE = errorHandler(deleteProductHandler);
+export const GET = apiErrorHandler(getProductByIdHandler);
+export const PUT = apiErrorHandler(updateProductHandler);
+export const DELETE = apiErrorHandler(deleteProductHandler);
 
 async function getProductByIdHandler(request, { params: { productId } }) {
   await productIdValidationSchema.validate(productId, { abortEarly: false });

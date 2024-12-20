@@ -1,6 +1,6 @@
 import React from "react";
 import ProductTable from "./ProductTable";
-import { getAllProducts } from "@/lib/products";
+import { getAllProducts } from "@/services/product.service";
 
 const Page = async () => {
   const { products, totalCount, totalPages, page } = await getAllProducts();

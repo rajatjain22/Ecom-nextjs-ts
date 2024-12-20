@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import prisma from "@/config/db.server";
 import { STATUS } from "@/constants/apiStatus";
 import { MESSAGES } from "@/constants/apiMessages";
-import { generateUniqueHandle, getAllProducts } from "@/lib/products";
-import { createCombinations } from "@/lib/products";
-import { errorHandler } from "@/errors/errorHandler";
+import { generateUniqueHandle, createCombinationsm } from "@/lib/products";
+import { apiErrorHandler } from "@/errors/apiErrorHandler";
 import CustomError from "@/errors/customError";
 import { productValidationSchema } from "@/utilities/yupValidations/product";
+import { getAllProducts } from "@/services/product.service";
 
-export const GET = errorHandler(getProductHandler);
-export const POST = errorHandler(createProductHandler);
+export const GET = apiErrorHandler(getProductHandler);
+export const POST = apiErrorHandler(createProductHandler);
 
 async function getProductHandler(request) {
   const { page, limit } = getPaginationParams(request);
@@ -47,8 +47,9 @@ function getPaginationParams(request) {
 async function createProductHandler(request) {
   const body = await request.json();
 
-  const dd = await productValidationSchema.validate(body, { abortEarly: false });
-  console.log(dd)
+  await productValidationSchema.validate(body, {
+    abortEarly: false,
+  });
 
   const {
     title,
@@ -61,14 +62,15 @@ async function createProductHandler(request) {
     isActive,
     sku,
     tags,
-    brandId,
+    brand,
     options,
     images,
-    categories,
+    category,
+    collections,
   } = body;
 
   const handle = await generateUniqueHandle(title);
-
+  console.log(brand);
   await prisma.$transaction(async (tx) => {
     const product = await tx.product.create({
       data: {
@@ -80,10 +82,12 @@ async function createProductHandler(request) {
         price,
         discount,
         tax,
-        isActive,
+        isActive: isActive === "true" || isActive === true,
         sku,
         tags,
-        brandId,
+        brandId: brand?.id,
+        categoryId: category?.id,
+        collectionId: collections?.id,
       },
     });
 
@@ -94,7 +98,6 @@ async function createProductHandler(request) {
     await Promise.all([
       createVariantsUsingOptions(tx, product.id, options),
       createImages(tx, product.id, images),
-      createCategories(tx, product.id, categories),
     ]);
   });
 
@@ -102,6 +105,9 @@ async function createProductHandler(request) {
 }
 
 const createVariantsUsingOptions = async (tx, productId, options) => {
+  if (options.length === 0) {
+    return true;
+  }
   try {
     const optionsData = options.map((option) => ({
       productId: productId,
@@ -162,26 +168,6 @@ const createImages = async (tx, productId, images) => {
   } catch (error) {
     throw new CustomError(
       "Failed to create product images",
-      STATUS.INTERNAL_SERVER_ERROR
-    );
-  }
-};
-
-const createCategories = async (tx, productId, categories) => {
-  try {
-    if (categories && Array.isArray(categories)) {
-      const categoryData = categories.map((categoryValue) => ({
-        productId: productId,
-        value: categoryValue,
-      }));
-
-      await tx.productCategory.createMany({
-        data: categoryData,
-      });
-    }
-  } catch (error) {
-    throw new CustomError(
-      "Failed to create product categories",
       STATUS.INTERNAL_SERVER_ERROR
     );
   }

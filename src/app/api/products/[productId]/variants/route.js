@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import prisma from "@/config/db.server";
 import { STATUS } from "@/constants/apiStatus";
-import { errorHandler } from "@/errors/errorHandler";
+import { apiErrorHandler } from "@/errors/apiErrorHandler";
 
-export const POST = errorHandler(createProductVariantHandler);
+export const POST = apiErrorHandler(createProductVariantHandler);
 
 async function createProductVariantHandler(request, { params: { productId } }) {
   const body = await request.json();
