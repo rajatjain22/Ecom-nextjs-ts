@@ -6,10 +6,10 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { getUserByEmail } from "@/lib/users";
 import { validateRequestBody } from "@/utilities/validations";
 
 import { SessionUser } from "@/interfaces/auth";
+import { getUserByEmail } from "@/services/customer.service";
 
 const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,

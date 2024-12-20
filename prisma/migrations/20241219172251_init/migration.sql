@@ -5,20 +5,40 @@ CREATE TABLE `Users` (
     `lastName` VARCHAR(255) NULL,
     `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
-    `mobile` VARCHAR(10) NULL,
+    `mobile` VARCHAR(20) NULL,
+    `gender` VARCHAR(191) NULL,
+    `dateOfBirth` VARCHAR(191) NULL,
     `role` ENUM('superadmin', 'admin', 'user') NOT NULL DEFAULT 'user',
-    `district` VARCHAR(255) NULL,
-    `state` VARCHAR(255) NULL,
     `profile` VARCHAR(255) NULL,
     `resetToken` VARCHAR(255) NULL,
     `resetTokenExpiry` DATETIME(3) NULL,
     `otp` VARCHAR(255) NULL,
     `otpExpiry` DATETIME(3) NULL,
     `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `notes` VARCHAR(191) NULL,
+    `tags` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Users_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `ShippingAddress` (
+    `id` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(255) NOT NULL,
+    `shippingAddressLine1` VARCHAR(255) NOT NULL,
+    `shippingAddressLine2` VARCHAR(255) NULL,
+    `postalCode` VARCHAR(20) NOT NULL,
+    `city` VARCHAR(255) NOT NULL,
+    `district` VARCHAR(255) NULL,
+    `state` VARCHAR(255) NULL,
+    `country` VARCHAR(255) NULL,
+    `isPrimary` BOOLEAN NOT NULL DEFAULT false,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -218,6 +238,9 @@ CREATE TABLE `Refund` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `ShippingAddress` ADD CONSTRAINT `ShippingAddress_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Product` ADD CONSTRAINT `Product_brandId_fkey` FOREIGN KEY (`brandId`) REFERENCES `ProductBrand`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

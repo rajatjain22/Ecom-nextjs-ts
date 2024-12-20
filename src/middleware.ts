@@ -8,10 +8,10 @@ import {
     PUBLIC_API_ROUTES,
     ROLE_ADMIN
 } from "@/lib/routes";
-import { errorHandler } from "./errors/errorHandler";
+import { apiErrorHandler } from "./errors/apiErrorHandler";
 import { SessionUser } from "./interfaces/auth";
 
-export const middleware = errorHandler(createMiddleware);
+export const middleware = apiErrorHandler(createMiddleware);
 
 interface Token{
     user?: SessionUser

@@ -2,10 +2,7 @@ import { getOrderById } from "@/lib/order";
 import OrderForm from "./Form";
 import SaveOrder from "./SaveOrder";
 import { notFound } from "next/navigation";
-
-function convertDecimalToNumber(decimalValue: any): number | null {
-  return decimalValue ? decimalValue.toNumber() : null;
-}
+import { convertDecimalToNumber } from "@/lib/products";
 
 // Function to fetch order data
 async function fetchOrderData(orderId: string | undefined) {

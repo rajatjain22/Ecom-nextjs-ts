@@ -4,6 +4,7 @@ export interface MessageType {
         FAILURE: string;
         INVALID_REQUEST_BODY: string;
         INVALID_REQUEST: string;
+        SOMTHING_WENT_WRONG: string
     };
     PRISMA: {
         UNIQUE_CONSTRAINT: string;

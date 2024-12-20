@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useFormik } from "formik";
 import Table from "@/components/common/Table";
 import Breadcrumb from "@/components/common/Breadcrumb";
@@ -18,8 +18,8 @@ import toast from "react-hot-toast";
 
 interface Collection {
   id: string;
-  description?: string;
   name: string;
+  description?: string;
 }
 
 interface Column {
@@ -41,20 +41,12 @@ interface CollectionsTableProps {
   createProductCollection: (params: {
     name: string;
     description: string;
-  }) => Promise<{
-    id: string;
-    name: string;
-    description: string;
-  }>;
+  }) => Promise<Collection>;
   updateProductCollection: (params: {
     id: string;
     name: string;
     description: string;
-  }) => Promise<{
-    id: string;
-    name: string;
-    description: string;
-  }>;
+  }) => Promise<Collection>;
   deleteProductCollection: (params: { id: string }) => Promise<void>;
   totalCount: number;
   totalPages: number;
@@ -76,153 +68,113 @@ const CollectionTable: React.FC<CollectionsTableProps> = ({
   const [currentPageState, setCurrentPageState] = useState<number>(currentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
-
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [collectionToDelete, setCollectionToDelete] = useState<Collection | null>(null);
 
-  const handleSave = async () => {
-    const { isValid, dirty, values } = formik;
-
-    if (!isValid || !dirty) {
-      toast.error(
-        "Please fill in all required fields correctly before saving."
-      );
-      return;
-    }
-
-    const { id, name, description } = values;
-
-    try {
-      if (id) {
-        await updateProductCollection({ id, name, description })
-        setCurrentCollections((prev) =>
-          prev.map((collection) =>
-            collection.id === id
-              ? { ...collection, name, description }
-              : collection
-          )
-        );
-        toast.success("Successfully updated the collection!");
-      } else {
-        const newCollection = await createProductCollection({
-          name,
-          description,
-        });
-
-        if (!newCollection) {
-          throw new Error("Failed to create the collection. Please try again.");
-        }
-
-        setCurrentCollections((prev) => [
-          ...prev,
-          { id: newCollection.id, name, description },
-        ]);
-
-        toast.success("Successfully created the collection!");
-      }
-
-      setOpenModal(false);
-    } catch (error: any) {
-      console.error("Error saving the collection:", error);
-      toast.error(
-        error.message || "An unexpected error occurred. Please try again."
-      );
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteProductCollection({ id });
-      setCurrentCollections((prevCollections) =>
-        prevCollections.filter((collection) => collection.id !== id)
-      );
-      toast.success("Collection deleted successfully.");
-    } catch (error) {
-      console.error("Error deleting the collection:", error);
-      toast.error("Failed to delete collection. Please try again.");
-    }
-  };
-
-  const openDeleteConfirmation = (collection: Collection) => {
-    setCollectionToDelete(collection);
-    setOpenDeleteModal(true);
-  };
-
-  // Handles cancelling the deletion
-  const handleCancelDelete = () => {
-    setOpenDeleteModal(false);
-    setCollectionToDelete(null);
-  };
-
-  // Handles confirming the deletion
-  const handleConfirmDelete = () => {
-    if (collectionToDelete) {
-      handleDelete(collectionToDelete.id);
-      setOpenDeleteModal(false);
-      setCollectionToDelete(null);
-    }
-  };
   const formik = useFormik({
-    initialValues: {
-      id: "",
-      name: "",
-      description: "",
-    },
+    initialValues: { id: "", name: "", description: "" },
     validationSchema: productCollectionvalidationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      await handleSave();
+      try {
+        if (openDeleteModal) {
+          await handleDelete(values.id);
+        } else {
+          await handleSave(values);
+        }
+      } catch (error: any) {
+        console.error("Error in form submission:", error);
+        toast.error(
+          error.message || "An unexpected error occurred. Please try again."
+        );
+      }
       setSubmitting(false);
     },
   });
 
-  const rows = currentCollections.map((collection) => ({
-    id: collection.id,
-    name: <div className="flex items-center">{collection.name}</div>,
-    description: (
-      <div className="truncate max-w-[100px] sm:max-w-[400px]">
-        {collection.description || "N/A"}
-      </div>
-    ),
-    action: (
-      <div className="flex space-x-2">
-        <EditIcon
-          className="w-4 h-4 text-blue-500 cursor-pointer"
-          onClick={() => handleEdit(collection)}
-        />
-        <DeleteIcon
-          className="w-4 h-4 text-red-500 cursor-pointer"
-          onClick={() => openDeleteConfirmation(collection)}
-        />
-      </div>
-    ),
-  }));
+  const handleSave = useCallback(
+    async (values: Collection) => {
+      const { id, name, description = "" } = values;
+      try {
+        if (id) {
+          await updateProductCollection({
+            id,
+            name,
+            description,
+          });
+          setCurrentCollections((prev) =>
+            prev.map((collection) =>
+              collection.id === id
+                ? { ...collection, name, description }
+                : collection
+            )
+          );
+          toast.success("Successfully updated the collection!");
+        } else {
+          const newCollection = await createProductCollection({
+            name,
+            description,
+          });
+          setCurrentCollections((prev) => [...prev, newCollection]);
+          toast.success("Successfully created the collection!");
+        }
+        formik.resetForm();
+        setOpenModal(false);
+      } catch (error: any) {
+        console.error("Error saving the collection:", error);
+        toast.error(
+          error.message || "Failed to save the collection. Please try again."
+        );
+      }
+    },
+    [updateProductCollection, createProductCollection, formik]
+  );
 
-  const columns: Column[] = [
-    { header: "", accessor: "" },
-    { header: "Name", accessor: "name" },
-    { header: "Description", accessor: "description" },
-    { header: "Action", accessor: "action" },
-  ];
+  const handleDelete = useCallback(
+    async (id: string) => {
+      try {
+        await deleteProductCollection({ id });
+        setCurrentCollections((prevCollections) =>
+          prevCollections.filter((collection) => collection.id !== id)
+        );
+        handleCancelDelete();
+        toast.success("Collection deleted successfully.");
+      } catch (error) {
+        console.error("Error deleting the collection:", error);
+        toast.error("Failed to delete collection. Please try again.");
+      }
+    },
+    [deleteProductCollection]
+  );
 
-  const handleNext = async (page: number) => {
-    if (loading) return;
+  const openDeleteConfirmation = (collection: Collection) => {
+    formik.setValues({
+      id: collection.id,
+      name: collection.name,
+      description: collection.description || "",
+    });
+    setOpenDeleteModal(true);
+  };
 
-    setLoading(true);
-    try {
-      const { collections: newCollections } = await getAllProductCollections({
-        page,
-      });
+  const handleCancelDelete = () => setOpenDeleteModal(false);
 
-      if (newCollections) {
+  const handleNext = useCallback(
+    async (page: number) => {
+      if (loading) return;
+
+      setLoading(true);
+      try {
+        const { collections: newCollections } = await getAllProductCollections({
+          page,
+        });
         setCurrentCollections(newCollections);
         setCurrentPageState(page);
+      } catch (error) {
+        console.error("Failed to fetch product collections:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch product collections:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [loading, getAllProductCollections]
+  );
 
   const handleEdit = (collection: Collection) => {
     formik.setValues({
@@ -232,6 +184,42 @@ const CollectionTable: React.FC<CollectionsTableProps> = ({
     });
     setOpenModal(true);
   };
+
+  const rows = useMemo(
+    () =>
+      currentCollections.map((collection) => ({
+        id: collection.id,
+        name: <div className="flex items-center">{collection.name}</div>,
+        description: (
+          <div className="truncate max-w-[100px] sm:max-w-[400px]">
+            {collection.description || "N/A"}
+          </div>
+        ),
+        action: (
+          <div className="flex space-x-2">
+            <EditIcon
+              className="w-4 h-4 text-blue-500 cursor-pointer"
+              onClick={() => handleEdit(collection)}
+            />
+            <DeleteIcon
+              className="w-4 h-4 text-red-500 cursor-pointer"
+              onClick={() => openDeleteConfirmation(collection)}
+            />
+          </div>
+        ),
+      })),
+    [currentCollections]
+  );
+
+  const columns: Column[] = useMemo(
+    () => [
+      { header: "", accessor: "" },
+      { header: "Name", accessor: "name" },
+      { header: "Description", accessor: "description" },
+      { header: "Action", accessor: "action" },
+    ],
+    []
+  );
 
   return (
     <>
@@ -244,8 +232,8 @@ const CollectionTable: React.FC<CollectionsTableProps> = ({
           <Button
             className="bg-primary text-white px-4 py-2 rounded"
             onClick={() => {
-              setOpenModal(true);
               formik.resetForm();
+              setOpenModal(true);
             }}
           >
             Create collection
@@ -265,6 +253,7 @@ const CollectionTable: React.FC<CollectionsTableProps> = ({
         notFoundText="No collections found"
       />
 
+      {/* Create/Edit Modal */}
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <ModalHeader onClose={() => setOpenModal(false)}>
           {formik.values.id ? "Edit Collection" : "Create Collection"}
@@ -318,7 +307,8 @@ const CollectionTable: React.FC<CollectionsTableProps> = ({
         <ModalFooter>
           <Button
             className="bg-red-500 text-white p-2 rounded"
-            onClick={handleConfirmDelete}
+            onClick={formik.submitForm}
+            loading={formik.isSubmitting}
           >
             Yes, Delete
           </Button>

@@ -1,9 +1,15 @@
 import React from "react";
-import { createProductCollection, getAllProductCollections, updateProductCollection, deleteProductCollection } from "@/lib/products";
 import CollectionTable from "./CollectionTable";
+import {
+  createProductCollection,
+  getAllProductCollections,
+  updateProductCollection,
+  deleteProductCollection,
+} from "@/services/product.service";
 
 const Page = async () => {
-  const { collections, totalCount, totalPages, page } = await getAllProductCollections();
+  const { collections, totalCount, totalPages, page } =
+    await getAllProductCollections();
 
   return (
     <CollectionTable
