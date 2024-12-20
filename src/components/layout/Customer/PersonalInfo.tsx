@@ -41,15 +41,15 @@ const PersonalInfo = ({ formik }: any) => {
           error={formik.touched.email ? formik.errors.email : undefined}
         />
         <Input
-          label="Phone"
-          placeholder="Phone"
+          label="mobile"
+          placeholder="mobile"
           type="number"
-          id="phone"
-          name="phone"
-          value={formik.values.phone}
+          id="mobile"
+          name="mobile"
+          value={formik.values.mobile}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.phone ? formik.errors.phone : undefined}
+          error={formik.touched.mobile ? formik.errors.mobile : undefined}
         />
       </div>
       <div className="flex flex-col sm:flex-row sm:gap-5 space-y-2 sm:space-y-0">

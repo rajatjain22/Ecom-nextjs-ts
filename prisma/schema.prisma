@@ -13,21 +13,42 @@ model Users {
   lastName         String?   @db.VarChar(255)
   email            String    @unique
   password         String    @db.VarChar(255)
-  mobile           String?   @db.VarChar(10)
+  mobile           String?   @db.VarChar(20)
+  gender           String?
+  dateOfBirth      String?
   role             Role      @default(user)
-  district         String?   @db.VarChar(255)
-  state            String?   @db.VarChar(255)
   profile          String?   @db.VarChar(255)
   resetToken       String?   @db.VarChar(255)
   resetTokenExpiry DateTime?
   otp              String?   @db.VarChar(255)
   otpExpiry        DateTime?
   isActive         Boolean   @default(true)
+  notes            String?
+  tags             String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @default(now()) @updatedAt
 
-  images Image[]
-  orders Order[]
+  images            Image[]
+  orders            Order[]
+  shippingAddresses ShippingAddress[]
+}
+
+model ShippingAddress {
+  id     String @id @default(cuid())
+  userId String @db.VarChar(255)
+  user   Users  @relation(fields: [userId], references: [id])
+
+  shippingAddressLine1 String  @db.VarChar(255)
+  shippingAddressLine2 String? @db.VarChar(255)
+  postalCode           String  @db.VarChar(20)
+  city                 String  @db.VarChar(255)
+  district             String? @db.VarChar(255)
+  state                String? @db.VarChar(255)
+  country              String? @db.VarChar(255)
+
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Product {
@@ -47,14 +68,14 @@ model Product {
   weight       Decimal? @db.Decimal(10, 2)
   weightType   String?  @db.VarChar(50)
   brandId      String?
-  categoryID   String?
+  categoryId   String?
   collectionId String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now()) @updatedAt
 
   images     Image[]
   brand      ProductBrand?      @relation(fields: [brandId], references: [id])
-  categories ProductCategory?   @relation(fields: [categoryID], references: [id])
+  category   ProductCategory?   @relation(fields: [categoryId], references: [id])
   collection ProductCollection? @relation(fields: [collectionId], references: [id])
   options    ProductOption[]
   reviews    ProductReview[]

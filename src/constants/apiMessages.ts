@@ -6,6 +6,7 @@ export const MESSAGES: MessageType = {
     FAILURE: "Request failed. Please try again.",
     INVALID_REQUEST_BODY: "Invalid request body.",
     INVALID_REQUEST: "Invalid request parameters.",
+    SOMTHING_WENT_WRONG: "Somthing went wrong.",
   },
   PRISMA: {
     UNIQUE_CONSTRAINT: "A record with this value already exists.",
@@ -42,5 +43,5 @@ export const MESSAGES: MessageType = {
     ACCESS_DENIED: "Access denied.",
   },
   DB_FAILURE: "Database failure.",
-  SERVER_ERROR: "An error occurred on the server. Please try again later.",
+  SERVER_ERROR: "Internal server error.",
 };

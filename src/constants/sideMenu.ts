@@ -25,12 +25,6 @@ export const sideMenu: SideMenuItem[] = [
       { label: "Collection", route: "/admin/products/collections" },
     ],
   },
-  // {
-  //   icon: ProductIcon,
-  //   label: "Products",
-  //   route: "/admin/products",
-  //   badge: 5,
-  // },
   {
     icon: UsersIcon,
     label: "Customers",

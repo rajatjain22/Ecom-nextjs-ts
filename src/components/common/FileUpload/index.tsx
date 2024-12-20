@@ -1,18 +1,12 @@
-import React, { useEffect } from "react";
+import React, { memo } from "react";
 import Image from "next/image";
 import { FileUploadProps } from "./type";
 import { UploadIcon } from "@/components/Icons";
 
-const FileUpload: React.FC<FileUploadProps> = ({ id, label, name, onChange, multiple=false, files=[], accept, ...rest }) => {
+const FileUpload: React.FC<FileUploadProps> = memo(({ id, label, name, onChange, multiple=false, files=[], accept, ...rest }) => {
   const acceptData = accept ? accept.map(e=>`image/${e.toLowerCase()}`).join(",") : "image/*";
 
-  // useEffect(() => {
-  //   files.forEach((file) => {
-  //     const objectURL = URL.createObjectURL(file);
-  //     return () => URL.revokeObjectURL(objectURL);
-  //   });
-  // }, [files]);
-
+  console.log("FileUpload render")
   return (
     <div className="w-full">
       {label && (
@@ -65,6 +59,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ id, label, name, onChange, mult
       />
     </div>
   );
-};
+});
 
 export default FileUpload;

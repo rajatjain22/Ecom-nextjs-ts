@@ -2,14 +2,14 @@ import prisma from "@/config/db.server";
 import { MESSAGES } from "@/constants/apiMessages";
 import { STATUS } from "@/constants/apiStatus";
 import { NextResponse, NextRequest } from "next/server";
-import { getUserByEmail } from "@/lib/users";
 import { validateRequestBody } from "@/utilities/validations";
 import { hashPassword } from "@/lib/auth";
 import { RequestBody } from "@/interfaces/api";
 
-import { errorHandler } from "@/errors/errorHandler";
+import { apiErrorHandler } from "@/errors/apiErrorHandler";
+import { getUserByEmail } from "@/services/customer.service";
 
-export const POST = errorHandler(createUser);
+export const POST = apiErrorHandler(createUser);
 
 async function createUser(request: NextRequest) {
     const body: RequestBody = await request.json();

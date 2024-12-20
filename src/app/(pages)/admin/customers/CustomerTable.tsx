@@ -46,6 +46,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
   totalPages,
   currentPage,
 }) => {
+  console.log(customers)
   const [currentCustomers, setCurrentCustomers] = useState<Customer[]>(customers);
   const [currentPageState, setCurrentPageState] = useState<number>(currentPage);
   const [loading, setLoading] = useState<boolean>(false);
@@ -144,7 +145,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
           currentPage: currentPageState,
         }}
         onPageChange={handleNext}
-        notFoundText="No order found"
+        notFoundText="No customers found"
       />
     </>
   );

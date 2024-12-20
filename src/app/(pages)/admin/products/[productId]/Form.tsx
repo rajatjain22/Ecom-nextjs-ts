@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { useFormik } from "formik";
 import Select from "@/components/common/Input/Select";
 import Button from "@/components/common/Button";
@@ -13,123 +13,129 @@ import { ProductFormValuesType } from "@/components/layout/Product/types";
 import Breadcrumb from "@/components/common/Breadcrumb";
 
 import { productValidationSchema } from "@/utilities/yupValidations/product";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import toast from "react-hot-toast";
+import { MESSAGES } from "@/constants/apiMessages";
+import { useRouter } from "next/navigation";
 
-const ProductForm: React.FC<any> = memo(({ product }) => {
-  const mutation = useMutation({
-    mutationFn: async (values: ProductFormValuesType) => {
-      const response = await axios.post("/api/products", values);
-      return response.data;
-    },
-    onError: (error: unknown) => {
-      const errorMessage =
-        axios.isAxiosError(error) && error.response?.data?.error
-          ? error.response.data.error
-          : "An unexpected error occurred. Please try again.";
-    },
-    onSuccess: (res: any) => {
-      console.log("Product created successfully", res);
-    },
-  });
+const ProductForm: React.FC<any> = memo(
+  ({
+    product,
+    createProduct,
+    getAllProductBrands,
+    getAllProductCollections,
+    getAllProductCategories,
+  }) => {
+    const router = useRouter();
+    const formik = useFormik<ProductFormValuesType>({
+      initialValues: {
+        title: product?.title || null,
+        description: product?.description || null,
+        media: product?.images || [],
+        isActive: product?.isActive || false,
+        price: product?.price || 0,
+        productType: product?.productType || null,
+        category: product?.category || null,
+        collections: product?.collection || null,
+        brand: product?.brand || null,
+        options: product?.options || [],
+        variants: product?.variants || false,
+        tags: product?.tags || null,
+        sku: product?.sku || null,
+        barcode: product?.barcode || null,
+        weight: product?.weight || 0,
+        weightType: product?.weightType || null,
+        quantity: product?.quantity || 0,
+        discount: product?.discount || 0,
+      },
+      validationSchema: productValidationSchema,
+      onSubmit: useCallback(
+        async (values, { setSubmitting }) => {
+          try {
+            await createProduct(values);
+            setSubmitting(false);
+            toast.success(MESSAGES.PRODUCT.CREATED);
+            router.push("/admin/products");
+          } catch (error: any) {
+            console.log(error);
+            toast.error(error.message || MESSAGES.GENERAL.SOMTHING_WENT_WRONG);
+          }
+        },
+        [createProduct, router]
+      ),
+    });
 
-  const formik = useFormik<ProductFormValuesType>({
-    initialValues: {
-      title: product?.title || "",
-      descriptions: product?.description || "",
-      media: product?.images || [],
-      category: product?.category || "",
-      isActive: product?.isActive || false,
-      price: product?.price || 0,
-      productType: product?.productType || "",
-      collections: product?.collections || "",
-      options: product?.options || [],
-      variants: product?.variants || false,
-      tags: product?.tags || "",
-      sku: product?.sku || "",
-      barcode: product?.barcode || "",
-      brand: product?.brand || "",
-      weight: product?.weight || 0,
-      weightType: product?.weightType || "",
-      quantity: product?.quantity || 0,
-      discount: product?.discount || 0 ,
-    },
-    validationSchema: productValidationSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      mutation.mutate(values)
-      setSubmitting(false);
-    },
-  });
-
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = parseInt(event.target.value, 10);
-    formik.setFieldValue("status", value === 1);
-  };
-
-  return (
-    <form onSubmit={formik.handleSubmit}>
-      {/* Title and Breadcrumb */}
-      <div className="flex flex-row justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold">
-            {product ? "Product" : "Add New Product"}
-          </h1>
-          <Breadcrumb />
-        </div>
-        <div className="flex space-x-2">
-          <Button
-            type="submit"
-            className="bg-primary text-white px-4 py-2 rounded"
-            disabled={formik.isSubmitting}
-          >
-            {product ? "Update" : "Save"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Form Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 space-y-6">
-          <GeneralInformation formik={formik} />
-          <VariantsSection
-            formik={formik}
-            productId={product?.id}
-            variantFirstId={product?.variantFirstId}
-          />
-
-          {/* Conditional rendering of PricingSection */}
-          {formik.values.options.length === 0 && (
-            <PricingSection formik={formik} />
-          )}
+    return (
+      <form onSubmit={formik.handleSubmit}>
+        <div className="flex flex-row justify-between items-center mb-6">
+          <div>
+            <h1 className="text-2xl font-semibold">
+              {product ? "Product" : "Add New Product"}
+            </h1>
+            <Breadcrumb />
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              type="submit"
+              className="bg-primary text-white px-4 py-2 rounded"
+              loading={formik.isSubmitting}
+              disabled={!formik.isValid || !formik.dirty}
+            >
+              {product ? "Update" : "Save"}
+            </Button>
+          </div>
         </div>
 
-        {/* Sidebar with Select and Product Organization */}
-        <div className="space-y-6">
-          <Card>
-            <Select
-              label="Status"
-              options={[
-                { label: "Draft", value: 0 },
-                { label: "Active", value: 1 },
-              ]}
-              name="status"
-              id="status"
-              value={formik.values.isActive ? 1 : 0}
-              onChange={handleStatusChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.isActive && formik.errors.isActive
-                  ? formik.errors.isActive
-                  : undefined
-              }
+        {/* Form Sections */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 space-y-6">
+            <GeneralInformation
+              formik={formik}
+              getAllProductCategories={getAllProductCategories}
             />
-          </Card>
+            <VariantsSection
+              formik={formik}
+              productId={product?.id}
+              variantFirstId={product?.variantFirstId}
+            />
 
-          <ProductOrganizationSection formik={formik} />
+            {/* Conditional rendering of PricingSection */}
+            {formik.values.options.length === 0 && (
+              <PricingSection formik={formik} />
+            )}
+          </div>
+
+          <div className="space-y-6">
+            <Card>
+              <Select
+                label="Status"
+                options={[
+                  { label: "Draft", value: "false" },
+                  { label: "Active", value: "true" },
+                ]}
+                name="isActive"
+                id="status"
+                value={formik.values.isActive ? "true" : "false"}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.isActive && formik.errors.isActive
+                    ? formik.errors.isActive
+                    : undefined
+                }
+              />
+            </Card>
+
+            <ProductOrganizationSection
+              formik={formik}
+              getAllProductBrands={getAllProductBrands}
+              getAllProductCollections={getAllProductCollections}
+            />
+          </div>
         </div>
-      </div>
-    </form>
-  );
-});
+      </form>
+    );
+  }
+);
 
+ProductForm.displayName = "ProductForm";
 export default ProductForm;

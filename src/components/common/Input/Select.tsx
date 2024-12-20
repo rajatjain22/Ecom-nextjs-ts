@@ -52,7 +52,7 @@ const Select: React.FC<SelectProps> = ({
           className={classes}
           onChange={handleChange}
           aria-invalid={!!error}
-          value={value} // Controlled component using `value` only
+          value={value}
           {...rest}
         >
           <option value="" disabled>

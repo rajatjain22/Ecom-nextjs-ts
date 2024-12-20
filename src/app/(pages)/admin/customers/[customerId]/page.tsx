@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import CustomerForm from "./Form";
-import { getCustomerById } from "@/lib/customer";
+import { createCustomer, getCustomerById, updateCustomer } from "@/services/customer.service";
 
 async function fetchCustomerData(customerId: string | undefined) {
   if (!customerId || customerId === "new") return;
@@ -12,8 +12,11 @@ async function fetchCustomerData(customerId: string | undefined) {
       email: true,
       mobile: true,
       role: true,
-      district: true,
-      state: true,
+      profile: true,
+      dateOfBirth: true,
+      gender: true,
+      notes: true,
+      tags: true,
       isActive: true,
       images: {
         select: {
@@ -26,13 +29,22 @@ async function fetchCustomerData(customerId: string | undefined) {
           isPrimary: true,
         },
       },
+      shippingAddresses: {
+        select: {
+          id: true,
+          shippingAddressLine1: true,
+          shippingAddressLine2: true,
+          postalCode: true,
+          city: true,
+          district: true,
+          state: true,
+          country: true,
+          isPrimary: true,
+        },
+      },
+      _count: true,
     },
   });
-
-  if (!customer) {
-    console.error("Customer not found");
-    return null;
-  }
 
   return customer;
 }
@@ -47,5 +59,5 @@ export default async function Page({
   const customer = await fetchCustomerData(customerId);
   if (customerId !== "new" && !customer) return notFound();
 
-  return <CustomerForm customer={customer} />;
+  return <CustomerForm customer={customer} createCustomer={createCustomer} updateCustomer={updateCustomer} />;
 }

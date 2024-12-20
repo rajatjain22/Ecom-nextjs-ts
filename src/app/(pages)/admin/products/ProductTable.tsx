@@ -15,7 +15,7 @@ interface Product {
   isActive: boolean;
   price: string;
   quantity: number;
-  category: string;
+  category: { id: string; name: string };
   totalQuantity: number;
   totalPriceRange: string;
   instock?: JSX.Element | string;
@@ -84,13 +84,11 @@ const ProductTable: React.FC<ProductTableProps> = ({
     price: product.price,
     quantity: product.quantity,
     instock: (
-      <div
-        className={`text-${product.quantity > 0 ? "green" : "red"}-500`}
-      >
+      <div className={`text-${product.quantity > 0 ? "green" : "red"}-500`}>
         {product.quantity > 0 ? "In Stock" : "Out of Stock"}
       </div>
     ),
-    category: product.category,
+    category: product.category?.name,
     action: (
       <div className="flex space-x-2">
         <EditIcon className="w-4 h-4 text-blue-500 cursor-pointer" />
@@ -150,7 +148,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
         pagination={{
           totalCount,
           totalPages,
-          currentPage: currentPageState
+          currentPage: currentPageState,
         }}
         onPageChange={handleNext}
         notFoundText="No product found"

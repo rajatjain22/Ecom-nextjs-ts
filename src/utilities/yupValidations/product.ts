@@ -39,10 +39,12 @@ export const productValidationSchema = Yup.object({
       /^[a-zA-Z\s]*$/,
       "Product type must only contain letters and spaces."
     )
-    .max(50, "Product type cannot exceed 50 characters.")
-    .optional(),
+    .max(50, "Product type cannot exceed 50 characters."),
 
-  collections: Yup.string().required("Collections is required"),
+  collections: Yup.object({
+    name: Yup.string().required("Collection name is required."),
+    id: Yup.string().required("Collection id is required."),
+  }).required("Collection is required."),
 
   options: Yup.array().of(optionValidationSchema),
 
@@ -59,14 +61,26 @@ export const productValidationSchema = Yup.object({
       .min(0, "Quantity cannot be negative")
   ),
   tags: Yup.string().required("Tags are required"),
-  category: Yup.string().required("Category is required"),
+
+  category: Yup.object({
+    name: Yup.string().required("Category name is required."),
+    id: Yup.string().required("Category id is required."),
+  }).required("Category is required."),
+
   isActive: Yup.boolean().required("isActive is required"),
+
   sku: Yup.string().optional(),
-  brand: Yup.string().required("Brand is required"),
+
+  brand: Yup.object({
+    name: Yup.string().required("Brand name is required."),
+    id: Yup.string().required("Brand id is required."),
+  }).required("Brand is required."),
+
   weight: Yup.number()
     .integer("Weight must be a integer")
     .min(0, "Weight cannot be negative")
     .optional(),
+
   weightType: Yup.string().when("weight", (val) => {
     if (val[0]) {
       return Yup.string().required("Weight type is required");
@@ -74,6 +88,7 @@ export const productValidationSchema = Yup.object({
       return Yup.string().optional();
     }
   }),
+
   discount: Yup.number()
     .integer("Discount must be an integer")
     .min(0, "Discount cannot be negative")
@@ -112,7 +127,19 @@ export const productIdValidationSchema = Yup.string()
 
 export const productCollectionvalidationSchema = Yup.object({
   name: Yup.string()
+    .required("Collection name is required")
+    .min(3, "Collection name must be at least 3 characters"),
+  description: Yup.string().required("Description is required"),
+});
+
+export const productBrandValidationSchema = Yup.object({
+  name: Yup.string()
+    .required("Brand name is required")
+    .min(3, "Brand name must be at least 3 characters"),
+});
+
+export const productCategoryValidationSchema = Yup.object({
+  name: Yup.string()
     .required("Category name is required")
     .min(3, "Category name must be at least 3 characters"),
-  description: Yup.string().required("Description is required"),
 });

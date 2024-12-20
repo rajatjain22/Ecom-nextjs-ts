@@ -22,23 +22,24 @@ export interface OptionItemType {
 
 export interface ProductFormValuesType {
   title: string;
-  descriptions: string;
+  description: string;
   media: any;
-  category: string;
-  isActive: boolean;
+  category?: { id: string; name: string };
+  isActive: string | boolean;
   price: number;
   productType: string;
-  collections: string;
+  collections?: { id: string; name: string };
   tags: string;
   options: OptionType[];
   variants: boolean;
-  brand: string;
+  brand?: { id: string; name: string };
   sku: string;
   barcode: string;
   quantity: number;
-  weight: string;
+  weight: number;
   weightType: string;
   discount: string;
+  tax?: any;
 }
 
 export interface ProductvariantFormValuesType {

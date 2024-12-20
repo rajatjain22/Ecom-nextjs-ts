@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Sidebar from "@/components/layout/Sidebar";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -30,11 +31,18 @@ const AuthProvider = ({ children, session }: AuthProviderProps) => {
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>
         {!isPublicPath && !isAdminPath && <Header />}
-        {!isPublicPath && isAdminPath && <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />}
-        <main className={` transition-all duration-300 ease-in-out ml-0 ${!isPublicPath && sidebarOpen && 'md:ml-[--w-side]'}`}>
+        {!isPublicPath && isAdminPath && (
+          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        )}
+        <main
+          className={` transition-all duration-300 ease-in-out ml-0 ${
+            !isPublicPath && sidebarOpen && "md:ml-[--w-side]"
+          }`}
+        >
           {children}
         </main>
         {!isPublicPath && !isAdminPath && <Footer />}
+        <Toaster position="bottom-center" reverseOrder={true} />
       </SessionProvider>
     </QueryClientProvider>
   );

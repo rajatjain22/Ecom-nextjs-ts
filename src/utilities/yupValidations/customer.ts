@@ -21,9 +21,9 @@ export const customerValidationSchema = Yup.object({
     )
     .required("Email is required"),
 
-  phone: Yup.string()
-    .matches(/^\d{10}$/, "Phone number must be 10 digits")
-    .required("Phone number is required"),
+  mobile: Yup.string()
+    .matches(/^\d{10}$/, "Mobile number must be 10 digits")
+    .required("Mobile number is required"),
 
   gender: Yup.string().required("Gender is required"),
 
